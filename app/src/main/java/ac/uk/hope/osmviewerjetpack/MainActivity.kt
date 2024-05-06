@@ -1,6 +1,5 @@
 package ac.uk.hope.osmviewerjetpack
 
-import ac.uk.hope.osmviewerjetpack.osm.ComposeMapView
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.os.Bundle
 import androidx.preference.PreferenceManager
@@ -47,26 +46,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.osmdroid.api.IMapController
-import org.osmdroid.config.Configuration
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // setup osm tile sources etc.
-        val ctx = applicationContext
-        Configuration
-            .getInstance()
-            .load(
-                ctx,
-                PreferenceManager.getDefaultSharedPreferences(ctx)
-            )
 
         setContent {
             OSMViewerJetpackTheme {
@@ -102,19 +87,6 @@ fun MainLayout(
 
         }
     }
-
-    ComposeMapView(
-        modifier = Modifier.fillMaxSize(),
-        onLoad = { map: MapView ->
-            run {
-                map.setMultiTouchControls(true);
-                map.controller.setZoom(9.5);
-                map.controller.setCenter(
-                    GeoPoint(50.0, 50.0)
-                );
-            }
-        }
-    )
 }
 
 @Preview

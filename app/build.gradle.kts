@@ -69,7 +69,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.osmdroid.android) // osmdroid, obviously
     implementation(libs.androidx.preference) // non-deprecated getDefaultSharedProperties
     implementation(libs.androidx.navigation.compose) // jetpack navigation
     implementation(libs.retrofit) // type-safe http requests
