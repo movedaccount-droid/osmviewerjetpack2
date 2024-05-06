@@ -2,7 +2,8 @@ package ac.uk.hope.osmviewerjetpack.data.repository
 
 import ac.uk.hope.osmviewerjetpack.data.model.Node
 
-// TODO: defining an interface seems unnecessary. why are we doing this?
+// we define our repositories as an interface, so that we can easily swap them out
+// for testing. if we get the chance
 
 interface NominatimRepository {
     suspend fun freeform(

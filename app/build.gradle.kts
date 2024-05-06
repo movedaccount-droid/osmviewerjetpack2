@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize") // https://developer.android.com/kotlin/parcelize#kts
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10" // to enable serialization
-    kotlin("kapt")
+    kotlin("kapt") // hilt dependency, annotation compiler
+    id("com.google.dagger.hilt.android") // hilt preprocessing
 }
 
 android {
@@ -53,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
