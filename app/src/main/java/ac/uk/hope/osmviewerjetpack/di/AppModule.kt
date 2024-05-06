@@ -22,7 +22,7 @@ object AppModule {
     // TODO: everyone seems to talk about this and i have no idea when we might need it
     @Provides
     @Singleton
-    fun provideApplication(@ApplicationContext app: Context): BaseApplication{
+    fun provideApplication(@ApplicationContext app: Context): BaseApplication {
         return app as BaseApplication
     }
 
