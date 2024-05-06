@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-parcelize") // https://developer.android.com/kotlin/parcelize#kts
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10" // to enable serialization
 }
 
 android {
@@ -66,5 +68,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.osmdroid.android)
+    implementation(libs.osmdroid.android) // osmdroid, obviously
+    implementation(libs.androidx.preference) // non-deprecated getDefaultSharedProperties
+    implementation(libs.androidx.navigation.compose) // jetpack navigation
+    implementation(libs.retrofit) // type-safe http requests
+    implementation(libs.kotlinx.serialization.json) // generic serde
+    implementation(libs.retrofit2.kotlinx.serialization.converter) // json deserialization
+    implementation(libs.okhttp) // json deserialization
 }
