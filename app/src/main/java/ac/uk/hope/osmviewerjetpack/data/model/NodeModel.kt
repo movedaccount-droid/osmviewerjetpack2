@@ -1,4 +1,4 @@
-package ac.uk.hope.osmviewerjetpack.model
+package ac.uk.hope.osmviewerjetpack.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -16,6 +16,7 @@ import kotlinx.serialization.Serializable
 // https://developer.android.com/codelabs/basic-android-kotlin-compose-getting-data-internet#7
 
 // we could add a domain layer, but we want all of this data directly, so there's no real need yet
+// so this is our Entity and also our Model. sure whatever
 // TODO: yet... but if these are actually optional, we definitely need a mapping class
 // TODO: and also, we don't only have nodes, but the api provides a list of Generic Shit!! so we
 // TODO: will probably need to filter things through

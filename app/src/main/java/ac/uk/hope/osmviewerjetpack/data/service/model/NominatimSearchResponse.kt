@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.network.model
+package ac.uk.hope.osmviewerjetpack.data.service.model
 
-import ac.uk.hope.osmviewerjetpack.model.Node
+import ac.uk.hope.osmviewerjetpack.data.model.Node
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 // TODO: fill this out!!
 
 @Serializable
-class NominatimFreeformResponseModel (
+data class NominatimSearchResponse (
     @SerialName("some")
     var some: String,
     var other: List<Node>

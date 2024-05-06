@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.network.service
+package ac.uk.hope.osmviewerjetpack.data.service.service
 
-import ac.uk.hope.osmviewerjetpack.network.model.NominatimFreeformResponseModel
+import ac.uk.hope.osmviewerjetpack.data.service.model.NominatimSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,20 +10,20 @@ import retrofit2.http.Query
 // see if there's any differences
 // TODO: do we need a token? not so far, but maybe "officially"
 
-interface NominatimRetrofitService {
+interface NominatimService {
     @GET("search")
     suspend fun freeform(
         @Query("q") query: String
-    ) : NominatimFreeformResponseModel
+    ) : NominatimSearchResponse
 
     @GET("search")
     suspend fun structured(
         @Query("amenity") amenity: String?,
-        @Query("amenity") street: String?,
-        @Query("amenity") city: String?,
-        @Query("amenity") county: String?,
-        @Query("amenity") state: String?,
-        @Query("amenity") country: String?,
-        @Query("amenity") postalcode: String?
-    )
+        @Query("street") street: String?,
+        @Query("city") city: String?,
+        @Query("county") county: String?,
+        @Query("state") state: String?,
+        @Query("country") country: String?,
+        @Query("postalcode") postalcode: String?
+    ) : NominatimSearchResponse
 }
