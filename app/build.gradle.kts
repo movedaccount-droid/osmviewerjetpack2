@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize") // https://developer.android.com/kotlin/parcelize#kts
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10" // to enable serialization
+    kotlin("kapt")
 }
 
 android {
@@ -75,4 +76,14 @@ dependencies {
     implementation(libs.kotlinx.serialization.json) // generic serde
     implementation(libs.retrofit2.kotlinx.serialization.converter) // json deserialization
     implementation(libs.okhttp) // json deserialization
+    implementation(libs.hilt.android) // hilt, and kapt annotation compiler
+    kapt(libs.hilt.compiler)
+    androidTestImplementation (libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    kaptTest(libs.hilt.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }
