@@ -1,9 +1,9 @@
 package ac.uk.hope.osmviewerjetpack.di
 
 import ac.uk.hope.osmviewerjetpack.BaseApplication
-import ac.uk.hope.osmviewerjetpack.data.repository.NominatimRepository
-import ac.uk.hope.osmviewerjetpack.data.repository.NominatimRepositoryImpl
-import ac.uk.hope.osmviewerjetpack.data.service.service.NominatimService
+import ac.uk.hope.osmviewerjetpack.network.MusicBrainzService
+import ac.uk.hope.osmviewerjetpack.repository.MusicBrainzRepository
+import ac.uk.hope.osmviewerjetpack.repository.MusicBrainzRepositoryImpl
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -26,21 +26,23 @@ object AppModule {
         return app as BaseApplication
     }
 
+    // TODO: service requires json head + user agent
+
     @Provides
     @Singleton
-    fun provideNominatimService(): NominatimService {
+    fun provideMusicBrainzService(): MusicBrainzService {
         return Retrofit.Builder()
-            .baseUrl("some")
+            .baseUrl("http://musicbrainz.org/ws/2/")
             .build()
-            .create(NominatimService::class.java)
+            .create(MusicBrainzService::class.java)
     }
 
     @Provides
     @Singleton
-    fun providerNominatimRepository(
-        service: NominatimService
-    ): NominatimRepository {
-        return NominatimRepositoryImpl(service)
+    fun providerMusicBrainzRepository(
+        service: MusicBrainzService
+    ): MusicBrainzRepository {
+        return MusicBrainzRepositoryImpl(service)
     }
 
 }
