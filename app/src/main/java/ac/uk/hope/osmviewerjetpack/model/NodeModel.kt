@@ -17,6 +17,8 @@ import kotlinx.serialization.Serializable
 
 // we could add a domain layer, but we want all of this data directly, so there's no real need yet
 // TODO: yet... but if these are actually optional, we definitely need a mapping class
+// TODO: and also, we don't only have nodes, but the api provides a list of Generic Shit!! so we
+// TODO: will probably need to filter things through
 
 @Parcelize
 @Serializable
