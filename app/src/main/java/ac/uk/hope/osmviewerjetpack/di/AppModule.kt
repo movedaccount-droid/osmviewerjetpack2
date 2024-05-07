@@ -60,7 +60,7 @@ object AppModule {
         val httpBuilder = getBaseHttpClientBuilder(mapOf(
             "api-key" to "0e6e5e68a5f5fd468a7d93a9a63cfee3")
         )
-        return getBaseRetrofitBuilder("http://webservice.fanart.tv/v3/", httpBuilder)
+        return getBaseRetrofitBuilder("https://webservice.fanart.tv/v3/", httpBuilder)
             .build()
             .create(FanartTvService::class.java)
 

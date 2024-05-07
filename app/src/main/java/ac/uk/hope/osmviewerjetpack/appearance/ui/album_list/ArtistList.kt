@@ -19,4 +19,9 @@ fun ArtistList() {
             Text(text = artist.name)
         }
     }
+    viewModel.images?.let {
+        Text(
+            it.banner.toString()
+        )
+    }
 }
