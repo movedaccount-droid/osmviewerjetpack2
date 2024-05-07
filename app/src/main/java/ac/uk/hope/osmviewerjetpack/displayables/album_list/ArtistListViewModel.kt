@@ -1,4 +1,4 @@
-package ac.uk.hope.osmviewerjetpack.appearance.ui.album_list
+package ac.uk.hope.osmviewerjetpack.displayables.album_list
 
 import ac.uk.hope.osmviewerjetpack.domain.fanarttv.model.ArtistImages
 import ac.uk.hope.osmviewerjetpack.domain.musicbrainz.model.Artist

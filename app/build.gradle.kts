@@ -76,7 +76,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json) // generic serde
     implementation(libs.retrofit2.kotlinx.serialization.converter) // json deserialization
     implementation(libs.converter.gson) // json deserialization again - do we need both?
-    implementation(libs.logging.interceptor)
+    implementation(libs.logging.interceptor) // okhttp logging, for debugging retrofit calls
+    implementation(libs.coil) // asynchronous image loading
+    implementation(libs.coil.compose) // coil jetpack support
     implementation(libs.hilt.android) // hilt, and kapt annotation compiler
     kapt(libs.hilt.compiler)
     androidTestImplementation (libs.hilt.android.testing)

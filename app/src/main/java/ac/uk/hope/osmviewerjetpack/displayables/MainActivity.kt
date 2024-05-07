@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.appearance
+package ac.uk.hope.osmviewerjetpack.displayables
 
-import ac.uk.hope.osmviewerjetpack.appearance.ui.album_list.ArtistList
+import ac.uk.hope.osmviewerjetpack.displayables.album_list.ArtistList
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity

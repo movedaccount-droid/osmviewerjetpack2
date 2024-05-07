@@ -1,11 +1,12 @@
 package ac.uk.hope.osmviewerjetpack.network.fanarttv.model
 
 import ac.uk.hope.osmviewerjetpack.domain.util.EntityMapperFrom
-import java.net.URL
+import android.net.Uri
 
-class ImageDtoMapper: EntityMapperFrom<ImageDto, URL> {
-    override fun mapFromEntity(imageDto: ImageDto): URL {
-        return URL(imageDto.url)
+class ImageDtoMapper: EntityMapperFrom<ImageDto, Uri> {
+
+    override fun mapFromEntity(imageDto: ImageDto): Uri {
+        return Uri.parse(Uri.decode(imageDto.url))
     }
 
 }
