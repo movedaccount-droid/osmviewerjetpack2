@@ -82,7 +82,7 @@ private fun getBaseHttpClientBuilder(headers: Map<String, String>): OkHttpClient
     // enabling logging
     val logging = HttpLoggingInterceptor()
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-    httpClient.addInterceptor(logging)
+    // httpClient.addInterceptor(logging)
 
     // replacing headers
     // https://stackoverflow.com/questions/32605711/adding-header-to-all-request-with-retrofit-2

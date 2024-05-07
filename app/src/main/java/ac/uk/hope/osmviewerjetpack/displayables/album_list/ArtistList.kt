@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +26,8 @@ fun ArtistList() {
         "testing"
     )
     LazyColumn {
-        items(viewModel.artists) { artist ->
+        itemsIndexed(viewModel.artists) { index, artist ->
+            viewModel.onChangeArtistListScrollPosition(index)
             Text(text = artist.name)
         }
     }
