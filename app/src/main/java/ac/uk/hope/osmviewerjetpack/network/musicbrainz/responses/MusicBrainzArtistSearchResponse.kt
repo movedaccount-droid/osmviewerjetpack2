@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.network.responses
+package ac.uk.hope.osmviewerjetpack.network.musicbrainz.responses
 
-import ac.uk.hope.osmviewerjetpack.network.model.ArtistDto
+import ac.uk.hope.osmviewerjetpack.network.musicbrainz.model.ArtistDto
 import kotlinx.serialization.Serializable
 
 // model for the api response, which we will then pass to the repository mappers for parsing

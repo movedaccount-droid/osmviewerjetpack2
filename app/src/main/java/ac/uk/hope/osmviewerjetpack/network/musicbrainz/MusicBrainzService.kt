@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.network
+package ac.uk.hope.osmviewerjetpack.network.musicbrainz
 
-import ac.uk.hope.osmviewerjetpack.network.responses.MusicBrainzArtistSearchResponse
+import ac.uk.hope.osmviewerjetpack.network.musicbrainz.responses.MusicBrainzArtistSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

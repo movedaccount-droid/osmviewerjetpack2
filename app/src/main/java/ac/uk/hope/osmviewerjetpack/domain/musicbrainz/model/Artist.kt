@@ -1,4 +1,4 @@
-package ac.uk.hope.osmviewerjetpack.domain.model
+package ac.uk.hope.osmviewerjetpack.domain.musicbrainz.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -15,13 +15,15 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Artist(
     val id: String,
-    val type: String,
-    val typeId: String,
+    val type: String?,
+    val typeId: String?,
     val score: Int,
     val name: String,
     val sortName: String,
-    val country: String,
-    val area: Area,
-    val disambiguation: String,
-    val tags: List<String>
+    val country: String?,
+    val area: Area?,
+    val beginArea: Area?,
+    val disambiguation: String?,
+    val lifeSpan: LifeSpan,
+    val tags: List<String>?
 ) : Parcelable

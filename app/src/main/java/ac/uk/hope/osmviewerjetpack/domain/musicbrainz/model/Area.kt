@@ -1,4 +1,4 @@
-package ac.uk.hope.osmviewerjetpack.domain.model
+package ac.uk.hope.osmviewerjetpack.domain.musicbrainz.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -7,7 +7,8 @@ import kotlinx.parcelize.Parcelize
 data class Area(
     val id: String,
     val type: String,
-    // TODO: will need mapping
     val typeId: String,
     val name: String,
+    val sortName: String,
+    val lifeSpan: LifeSpan
 ) : Parcelable

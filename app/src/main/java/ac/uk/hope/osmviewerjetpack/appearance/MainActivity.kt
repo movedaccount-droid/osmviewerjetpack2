@@ -1,6 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.appearance
 
-import ac.uk.hope.osmviewerjetpack.appearance.ui.album_list.AlbumList
+import ac.uk.hope.osmviewerjetpack.appearance.ui.album_list.ArtistList
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -86,7 +86,7 @@ fun MainLayout() {
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            AlbumList()
+            ArtistList()
         }
     }
 }

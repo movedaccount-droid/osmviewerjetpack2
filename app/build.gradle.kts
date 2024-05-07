@@ -72,9 +72,11 @@ dependencies {
     implementation(libs.androidx.preference) // non-deprecated getDefaultSharedProperties
     implementation(libs.androidx.navigation.compose) // jetpack navigation
     implementation(libs.retrofit) // type-safe http requests
+    implementation(libs.okhttp) // also required
     implementation(libs.kotlinx.serialization.json) // generic serde
     implementation(libs.retrofit2.kotlinx.serialization.converter) // json deserialization
-    implementation(libs.okhttp) // json deserialization
+    implementation(libs.converter.gson) // json deserialization again - do we need both?
+    implementation(libs.logging.interceptor)
     implementation(libs.hilt.android) // hilt, and kapt annotation compiler
     kapt(libs.hilt.compiler)
     androidTestImplementation (libs.hilt.android.testing)
