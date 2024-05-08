@@ -10,12 +10,15 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 @Composable
 fun MBVBottomBar(
+    fabIcon: ImageVector,
+    fabIconDescription: Int,
     onClickDestination: (dest: String) -> Unit = {},
-    onClickButton: () -> Unit = {},
+    onClickFAB: () -> Unit = {},
 ) {
     BottomAppBar(
         actions = {
@@ -30,11 +33,11 @@ fun MBVBottomBar(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* do something */ },
+                onClick = onClickFAB,
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
             ) {
-                Icon(Icons.Filled.Add, "Localized description")
+                Icon(fabIcon, stringResource(id = fabIconDescription))
             }
         }
     )
