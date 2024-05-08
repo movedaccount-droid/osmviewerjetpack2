@@ -11,11 +11,11 @@ class ArtistDtoMapper: EntityMapperFrom<FanartTvArtistResponse, ArtistImages> {
     override fun mapFromEntity(response: FanartTvArtistResponse): ArtistImages {
         val idm = ImageDtoMapper()
         return ArtistImages(
-            idm.mapFromEntityList(response.artistBackground),
-            idm.mapFromEntityList(response.musicBanner),
-            idm.mapFromEntityList(response.hdMusicLogo),
-            idm.mapFromEntityList(response.musicLogo),
-            idm.mapFromEntityList(response.artistThumb),
+            response.artistBackground?.let { idm.mapFromEntityList(it) },
+            response.musicBanner?.let { idm.mapFromEntityList(it) },
+            response.hdMusicLogo?.let { idm.mapFromEntityList(it) },
+            response.musicLogo?.let { idm.mapFromEntityList(it) },
+            response.artistThumb?.let { idm.mapFromEntityList(it) },
         )
     }
 

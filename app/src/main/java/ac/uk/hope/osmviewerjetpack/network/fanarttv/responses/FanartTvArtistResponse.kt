@@ -15,14 +15,14 @@ data class FanartTvArtistResponse (
     @SerializedName("mbid_id")
     val mbidId: String,
     @SerializedName("artistbackground")
-    val artistBackground: List<ImageDto>,
+    val artistBackground: List<ImageDto>?,
     @SerializedName("artistthumb")
-    val artistThumb: List<ImageDto>,
+    val artistThumb: List<ImageDto>?,
     @SerializedName("musiclogo")
-    val musicLogo: List<ImageDto>,
+    val musicLogo: List<ImageDto>?,
     @SerializedName("hdmusiclogo")
-    val hdMusicLogo: List<ImageDto>,
-    val albums: Map<String, AlbumDto>,
+    val hdMusicLogo: List<ImageDto>?,
+    val albums: Map<String, AlbumDto>?,
     @SerializedName("musicbanner")
-    val musicBanner: List<ImageDto>,
+    val musicBanner: List<ImageDto>?,
 )

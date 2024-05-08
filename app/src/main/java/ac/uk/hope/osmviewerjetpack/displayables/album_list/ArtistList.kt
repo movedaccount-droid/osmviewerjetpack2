@@ -31,14 +31,14 @@ fun ArtistList() {
             Text(text = artist.name)
         }
     }
-    viewModel.images?.let {
+    viewModel.images.let {
         Text(
-            it.banner.toString()
+            it.toString()
         )
-        Log.d(TAG, "loading ${it.banner.first()}")
+        Log.d(TAG, "loading ${it}")
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(it.banner.first())
+                .data(it)
                 .build(),
             placeholder = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "some",

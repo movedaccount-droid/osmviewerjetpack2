@@ -7,6 +7,7 @@ import ac.uk.hope.osmviewerjetpack.repository.fanarttv.FanartTvRepository
 import ac.uk.hope.osmviewerjetpack.repository.fanarttv.FanartTvRepositoryImpl
 import ac.uk.hope.osmviewerjetpack.repository.musicbrainz.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.repository.musicbrainz.MusicBrainzRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.util.HTTP_LOGGING_LEVEL
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -57,8 +58,10 @@ object AppModule {
 
         // TODO: get this key
         // TODO: there's probably a central/secure way for storing keys rather than this
-        val httpBuilder = getBaseHttpClientBuilder(mapOf(
-            "api-key" to "0e6e5e68a5f5fd468a7d93a9a63cfee3")
+        val httpBuilder = getBaseHttpClientBuilder(
+            mapOf(
+                "api-key" to "0e6e5e68a5f5fd468a7d93a9a63cfee3"
+            )
         )
         return getBaseRetrofitBuilder("https://webservice.fanart.tv/v3/", httpBuilder)
             .build()
@@ -81,8 +84,8 @@ private fun getBaseHttpClientBuilder(headers: Map<String, String>): OkHttpClient
 
     // enabling logging
     val logging = HttpLoggingInterceptor()
-    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-    // httpClient.addInterceptor(logging)
+    logging.setLevel(HTTP_LOGGING_LEVEL);
+    httpClient.addInterceptor(logging)
 
     // replacing headers
     // https://stackoverflow.com/questions/32605711/adding-header-to-all-request-with-retrofit-2

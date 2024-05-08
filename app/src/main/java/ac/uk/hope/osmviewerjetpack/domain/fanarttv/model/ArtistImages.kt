@@ -8,9 +8,9 @@ import kotlinx.parcelize.Parcelize
 // album images that we will otherwise be calling one-by-one
 @Parcelize
 data class ArtistImages(
-    val background: List<Uri>,
-    val banner: List<Uri>,
-    val hdLogo: List<Uri>,
-    val logo: List<Uri>,
-    val thumbnail: List<Uri>,
+    val background: List<Uri>?,
+    val banner: List<Uri>?,
+    val hdLogo: List<Uri>?,
+    val logo: List<Uri>?,
+    val thumbnail: List<Uri>?,
 ) : Parcelable
