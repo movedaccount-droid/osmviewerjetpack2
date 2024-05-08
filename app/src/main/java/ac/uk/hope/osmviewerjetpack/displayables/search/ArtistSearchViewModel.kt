@@ -36,6 +36,7 @@ class ArtistListViewModel
     val loading = mutableStateOf(false)
     val endOfResults = mutableStateOf(false)
 
+    private var query = ""
     private var page = 0
     private var firstVisibleItem = 0
     private var lastVisibleItem = 0
@@ -55,13 +56,18 @@ class ArtistListViewModel
         loadNeededArtistImage()
     }
 
+    fun sendQuery(newQuery: String) {
+        query = newQuery
+        getNextPage()
+    }
+
     // get next page of musicbrainz results
     fun getNextPage() {
         Log.d(TAG, "next page called")
         if (!loading.value && !endOfResults.value) {
             viewModelScope.launch {
                 val dataResult = musicBrainzRepository.searchArtistsName(
-                    query = "red",
+                    query = query,
                     limit = PAGE_SIZE,
                     offset = PAGE_SIZE * page
                 )
@@ -100,16 +106,12 @@ class ArtistListViewModel
     // start the next image request if any artists on-screen have not yet been loaded
     // this helps avoid mashing the api with requests the user won't look at (i.e. changes tabs)
     private fun loadNeededArtistImage() {
-        if (!fanartTvLoading) {
+        if (!fanartTvLoading && !artists.isEmpty()) {
             artists.subList(firstVisibleItem, lastVisibleItem).find {
                 images[it.id] == null
             }?.let {
                 makeArtistImageRequest(it.id)
             }
         }
-    }
-
-    init {
-        getNextPage()
     }
 }

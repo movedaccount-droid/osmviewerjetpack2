@@ -34,11 +34,20 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
 @Composable
-fun ArtistList() {
+fun ArtistList(
+    query: String
+) {
 
     val viewModel: ArtistListViewModel = hiltViewModel()
     val listState = rememberLazyListState()
 
+    // LaunchedEffect runs when its given dependency changes.
+    // therefore Unit forces it to only run once
+    LaunchedEffect(Unit) {
+        viewModel.sendQuery(query)
+    }
+
+    // for some reason combining these makes only the first flow run. weird
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .distinctUntilChanged()
@@ -112,6 +121,6 @@ fun ArtistList() {
 @Composable
 private fun PreviewArtistList() {
     OSMViewerJetpackTheme {
-        ArtistList()
+        ArtistList("red")
     }
 }
