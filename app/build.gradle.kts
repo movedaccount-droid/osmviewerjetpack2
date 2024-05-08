@@ -85,6 +85,7 @@ dependencies {
     kaptAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose) // navhost support for hilt
 }
 
 kapt {

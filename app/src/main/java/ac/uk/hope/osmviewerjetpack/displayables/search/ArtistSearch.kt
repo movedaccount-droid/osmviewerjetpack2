@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.filter
 @Composable
 fun ArtistList() {
 
-    val viewModel: ArtistListViewModel = viewModel()
+    val viewModel: ArtistListViewModel = hiltViewModel()
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {

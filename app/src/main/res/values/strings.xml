@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">OSMViewerJetpack</string>
-    <string name="search_content_desc">Search icon</string>
+    <string name="search_icon_desc">Search icon</string>
+    <string name="home_icon_desc">Home icon</string>
 </resources>

@@ -16,9 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val PAGE_SIZE = 30
+const val PAGE_SIZE = 15
 // TODO: replace with a sane, local default
-val BACKUP_IMAGE_URI = Uri.parse(
+val BACKUP_IMAGE_URI: Uri = Uri.parse(
     Uri.decode(
         "https://www.svgrepo.com/show/401366/cross-mark-button.svg"
     )
