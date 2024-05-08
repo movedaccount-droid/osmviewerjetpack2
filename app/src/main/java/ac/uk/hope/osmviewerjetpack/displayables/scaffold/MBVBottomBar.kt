@@ -1,7 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.scaffold
 
 import ac.uk.hope.osmviewerjetpack.displayables.bottomBarScreenDestinations
-import ac.uk.hope.osmviewerjetpack.displayables.navigateSingleTopTo
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar

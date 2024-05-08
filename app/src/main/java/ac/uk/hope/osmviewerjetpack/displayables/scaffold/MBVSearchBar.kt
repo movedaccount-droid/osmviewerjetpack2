@@ -21,28 +21,32 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MBVSearchBar(
+    active: Boolean,
+    onActiveChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     onSearch: (String) -> Unit = {}
 ) {
 
-    val searchActive = remember { mutableStateOf(false) }
     val query = remember { mutableStateOf("") }
 
     SearchBar(
         query = query.value,
         onQueryChange = { query.value = it },
         onSearch = { query ->
-            searchActive.value = false
-            onSearch(query)
+            if (query != "") {
+                onActiveChanged(false)
+                onSearch(query)
+            }
         },
-        active = searchActive.value,
-        onActiveChange = { searchActive.value = it },
+        active = active,
+        onActiveChange = onActiveChanged,
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
                 contentDescription = stringResource(R.string.search_icon_desc)
             )
         },
-        modifier = Modifier.padding(if (searchActive.value) 0.dp else 8.dp)
+        modifier = modifier.padding(if (active) 0.dp else 8.dp)
     ) {
         LazyColumn {
             items(5) {
@@ -55,7 +59,13 @@ fun MBVSearchBar(
 @Preview
 @Composable
 private fun PreviewMBVSearchBar() {
+
+    val searchActive = remember { mutableStateOf(false) }
+
     OSMViewerJetpackTheme {
-        MBVSearchBar()
+        MBVSearchBar(
+            searchActive.value,
+            { searchActive.value = it }
+        )
     }
 }

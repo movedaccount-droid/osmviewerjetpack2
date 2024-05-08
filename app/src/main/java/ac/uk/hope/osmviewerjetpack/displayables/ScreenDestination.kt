@@ -27,7 +27,7 @@ object ArtistSearch: ScreenDestination {
     override val icon = Icons.Default.Search
     override val iconDesc = R.string.search_icon_desc
     override val route = "search"
-    val queryArg = "query"
+    const val queryArg = "query"
     val routeWithArgs = "${route}/{${queryArg}}"
     val arguments = listOf(
         navArgument(queryArg) {

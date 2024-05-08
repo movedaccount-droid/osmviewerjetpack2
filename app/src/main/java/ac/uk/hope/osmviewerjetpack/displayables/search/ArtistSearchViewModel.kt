@@ -98,8 +98,12 @@ class ArtistListViewModel
                 images[mbid] = BACKUP_IMAGE_URI
             }
         }.invokeOnCompletion {
-            fanartTvLoading = false
-            loadNeededArtistImage()
+            // don't try to load next image if thread cancelled:
+            // we probably left the composable; this viewmodel is dead
+            if (it == null) {
+                fanartTvLoading = false
+                loadNeededArtistImage()
+            }
         }
     }
 
