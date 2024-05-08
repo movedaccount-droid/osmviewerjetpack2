@@ -5,6 +5,7 @@ import ac.uk.hope.osmviewerjetpack.displayables.scaffold.MBVBottomBar
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.MBVNavHost
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.MBVSearchBar
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.SearchFab
+import ac.uk.hope.osmviewerjetpack.displayables.scaffold.navigateSingleTopTo
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.navigateToSearch
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.os.Bundle
@@ -98,9 +99,15 @@ fun MainLayout() {
             MBVBottomBar(
                 fabIcon = currentFab.icon,
                 fabIconDescription = currentFab.iconDesc,
-                onClickFAB = when (currentFab) {
-                    SearchFab -> {{ searchActive.value = true }}
-                    else -> {{}}
+                onClickDestination = {
+                    searchActive.value = false
+                    navController.navigateSingleTopTo(it)
+                },
+                onClickFAB = {
+                    when (currentFab) {
+                        SearchFab -> { searchActive.value = true }
+                        else -> {}
+                    }
                 }
             )
         }
