@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OSMViewerJetpack</string>
+    <string name="search_content_desc">Search icon</string>
 </resources>

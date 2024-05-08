@@ -10,7 +10,7 @@ class FanartTvRepositoryImpl(
 ): FanartTvRepository {
 
     // TODO: for now we set this reaally high until we stop hammering it with our ui
-    private val rateLimiter = RateLimiter(10000)
+    private val rateLimiter = RateLimiter(1000)
     override suspend fun getArtistImages(
         mbid: String,
     ): ArtistImages {

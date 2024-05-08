@@ -6,4 +6,4 @@ import okhttp3.logging.HttpLoggingInterceptor
 val TAG = "MusicBrainzViewer"
 
 // retrofit2 logging level
-val HTTP_LOGGING_LEVEL = HttpLoggingInterceptor.Level.BODY
+val HTTP_LOGGING_LEVEL = HttpLoggingInterceptor.Level.BASIC
