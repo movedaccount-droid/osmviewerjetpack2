@@ -20,7 +20,8 @@ class MusicBrainzRepositoryImpl(
         offset: Int
     // TODO: this should be an external
     ): List<ArtistLocal> {
-        rateLimiter.await()
+        // TODO: refactor to support new ratelimiter StateFlow syntax instead of old queueing format
+        // rateLimiter.await()
         return musicBrainzService.searchArtists(
             "artist:$query",
             limit,

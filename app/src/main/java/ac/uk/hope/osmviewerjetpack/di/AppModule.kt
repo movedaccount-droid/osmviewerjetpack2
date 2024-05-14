@@ -5,6 +5,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRep
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepositoryImpl
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.FanartTvDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.AlbumImagesDao
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.ArtistImagesDao

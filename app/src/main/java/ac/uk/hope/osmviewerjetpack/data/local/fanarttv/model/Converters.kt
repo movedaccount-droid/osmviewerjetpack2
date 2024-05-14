@@ -22,7 +22,6 @@ class Converters {
 
     @TypeConverter
     fun uriListToJson(value: List<Uri>): String {
-        Log.d(TAG, "LISTED")
         return Gson().toJson(value.map(Uri::toString))
     }
 
