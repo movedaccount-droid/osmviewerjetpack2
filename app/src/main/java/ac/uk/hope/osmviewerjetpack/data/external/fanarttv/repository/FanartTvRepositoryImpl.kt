@@ -39,16 +39,12 @@ class FanartTvRepositoryImpl(
     private val rateLimiter = RateLimiter(1000)
 
     // get local first, and if not exists get from api
-    // TODO: we should really really test this. the return if the dao doesn't find any result
-    // is undefined: might throw exception, might null. who knows!!
     override fun getArtistImages(
         mbid: String,
     ): Flow<ArtistImages> {
-        Log.d(TAG, "calling on $mbid")
         return artistImagesDao.observe(mbid)
             .mapNotNull { artistImages ->
                 if (artistImages == null) {
-                    Log.d(TAG, "was null, updating")
                     updateArtistImagesFromNetwork(mbid)
                 }
                 artistImages
@@ -57,9 +53,7 @@ class FanartTvRepositoryImpl(
 
     private suspend fun updateArtistImagesFromNetwork(mbid: String) {
         withContext(dispatcher) {
-            Log.d(TAG, "starting")
             rateLimiter.startOperation()
-            Log.d(TAG, "started")
             try {
                 val artistImages = service.getArtistImages(mbid).toLocal()
                 artistImages.albums?.let { albumImagesDao.upsertAll(it) }
@@ -73,7 +67,6 @@ class FanartTvRepositoryImpl(
                 }
             } finally {
                 rateLimiter.endOperationAndLimit()
-                Log.d(TAG, "ended")
             }
         }
     }
