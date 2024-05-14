@@ -1,12 +1,11 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
-import ac.uk.hope.osmviewerjetpack.domain.musicbrainz.model.Artist
-import ac.uk.hope.osmviewerjetpack.repository.fanarttv.FanartTvRepository
-import ac.uk.hope.osmviewerjetpack.repository.musicbrainz.MusicBrainzRepository
+import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
 import ac.uk.hope.osmviewerjetpack.util.TAG
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +30,7 @@ class ArtistListViewModel
     private val fanartTvRepository: FanartTvRepository
 ): ViewModel() {
 
-    val artists = mutableStateListOf<Artist>()
+    val artists = mutableStateListOf<ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal>()
     val images = mutableStateMapOf<String, Uri?>()
     val loading = mutableStateOf(false)
     val endOfResults = mutableStateOf(false)
@@ -84,18 +83,11 @@ class ArtistListViewModel
 
     // make request, push result and start next request
     private fun makeArtistImageRequest(mbid: String) {
+        // TODO: checking loading this way is no longer functional, since the flow returns instantly
         fanartTvLoading = true
         viewModelScope.launch {
-            try {
-                val imageResult = fanartTvRepository.getArtistImages(mbid)
-                images[mbid] = imageResult.thumbnail?.first()
-                    ?: imageResult.background?.first()
-                    ?: imageResult.hdLogo?.first()
-                    ?: imageResult.logo?.first()
-                    ?: imageResult.banner?.first()
-                    ?: BACKUP_IMAGE_URI
-            } catch (e: Throwable) {
-                images[mbid] = BACKUP_IMAGE_URI
+            fanartTvRepository.getArtistImages(mbid).collect() {
+                images[mbid] = it.thumbnail
             }
         }.invokeOnCompletion {
             // don't try to load next image if thread cancelled:

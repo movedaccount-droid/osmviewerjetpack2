@@ -1,19 +1,24 @@
 package ac.uk.hope.osmviewerjetpack.di
 
 import ac.uk.hope.osmviewerjetpack.BaseApplication
-import ac.uk.hope.osmviewerjetpack.network.fanarttv.FanartTvService
-import ac.uk.hope.osmviewerjetpack.network.musicbrainz.MusicBrainzService
-import ac.uk.hope.osmviewerjetpack.repository.fanarttv.FanartTvRepository
-import ac.uk.hope.osmviewerjetpack.repository.fanarttv.FanartTvRepositoryImpl
-import ac.uk.hope.osmviewerjetpack.repository.musicbrainz.MusicBrainzRepository
-import ac.uk.hope.osmviewerjetpack.repository.musicbrainz.MusicBrainzRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
+import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.FanartTvDatabase
+import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.AlbumImagesDao
+import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.ArtistImagesDao
+import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.FanartTvService
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.util.HTTP_LOGGING_LEVEL
 import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,7 +31,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // TODO: everyone seems to talk about this and i have no idea when we might need it
+    // TODO: everyone seems to talk about injecting the base application
+    // and i have no idea when we might need it
     @Provides
     @Singleton
     fun provideApplication(@ApplicationContext app: Context): BaseApplication {
@@ -56,7 +62,6 @@ object AppModule {
     @Singleton
     fun provideFanartTvService(): FanartTvService {
 
-        // TODO: get this key
         // TODO: there's probably a central/secure way for storing keys rather than this
         val httpBuilder = getBaseHttpClientBuilder(
             mapOf(
@@ -69,12 +74,33 @@ object AppModule {
 
     }
 
+    @Singleton
+    @Provides
+    fun provideFanartTvDataBase(@ApplicationContext context: Context): FanartTvDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            FanartTvDatabase::class.java,
+            "Images.db"
+        ).build()
+    }
+
+    @Provides
+    fun provideAlbumImagesDao(database: FanartTvDatabase): AlbumImagesDao
+            = database.albumImagesDao()
+
+    @Provides
+    fun provideArtistImagesDao(database: FanartTvDatabase): ArtistImagesDao
+            = database.artistImagesDao()
+
     @Provides
     @Singleton
     fun provideFanartTvRepository(
-        service: FanartTvService
+        albumImagesDao: AlbumImagesDao,
+        artistImagesDao: ArtistImagesDao,
+        service: FanartTvService,
+        @DefaultDispatcher dispatcher: CoroutineDispatcher,
     ): FanartTvRepository {
-        return FanartTvRepositoryImpl(service)
+        return FanartTvRepositoryImpl(albumImagesDao, artistImagesDao, service, dispatcher)
     }
 
 }

@@ -86,6 +86,11 @@ dependencies {
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose) // navhost support for hilt
+    implementation(libs.androidx.room.runtime) // room sql database
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.rxjava3)
 }
 
 kapt {
