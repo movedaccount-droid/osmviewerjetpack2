@@ -24,11 +24,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
 @Composable
-fun ArtistList(
-    query: String
+fun ArtistSearch(
+    query: String,
+    onArtistSelected: (String) -> Unit = {}
 ) {
 
-    val viewModel: ArtistListViewModel = hiltViewModel()
+    val viewModel: ArtistSearchViewModel = hiltViewModel()
     val listState = rememberLazyListState()
 
     // LaunchedEffect runs when its given dependency changes.
@@ -74,7 +75,9 @@ fun ArtistList(
                     ?: artist.type
                     ?: artist.area?.name
                     ?: artist.beginArea?.name
+                    // TODO: this leads to nasty formatting, should just be nullable
                     ?: "",
+                onClick = { onArtistSelected(artist.mbid) }
             )
         }
         if (viewModel.endOfResults.value) {
@@ -111,6 +114,6 @@ fun ArtistList(
 @Composable
 private fun PreviewArtistList() {
     OSMViewerJetpackTheme {
-        ArtistList("red")
+        ArtistSearch("red")
     }
 }

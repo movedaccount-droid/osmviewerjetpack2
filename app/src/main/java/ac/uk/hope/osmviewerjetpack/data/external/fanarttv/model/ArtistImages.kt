@@ -1,12 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model
 
-import ac.uk.hope.osmviewerjetpack.displayables.search.BACKUP_IMAGE_URI
 import android.net.Uri
 
-
-// TODO: do we need Parcelize functionality? this is advertised to allow passing objects between
-// fragments, which aren't used in compose. even still this is discussed in compose tutorials
-// a lot, despite google advice to avoid passing complex objects this way. maybe outdated?
 class ArtistImages (
     val backgrounds: List<Uri> = listOf(),
     val banners: List<Uri> = listOf(),
@@ -22,4 +17,12 @@ class ArtistImages (
             ?: logos.firstOrNull()
             ?: banners.firstOrNull()
             ?: BACKUP_IMAGE_URI
+
 }
+
+// TODO: replace with a sane, local default
+private val BACKUP_IMAGE_URI: Uri = Uri.parse(
+    Uri.decode(
+        "https://www.svgrepo.com/show/401366/cross-mark-button.svg"
+    )
+)

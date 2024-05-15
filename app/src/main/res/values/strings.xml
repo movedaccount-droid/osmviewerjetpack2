@@ -4,4 +4,5 @@
     <string name="home_icon_desc">Home icon</string>
     <string name="back_button_desc">Back button</string>
     <string name="search_fab_desc">Search button</string>
+    <string name="artist_icon_desc">Artist icon</string>
 </resources>

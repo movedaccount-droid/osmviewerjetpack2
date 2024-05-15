@@ -8,15 +8,9 @@ import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.ArtistImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.FanartTvService
 import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.responses.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
-import ac.uk.hope.osmviewerjetpack.util.TAG
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
@@ -45,13 +39,13 @@ class FanartTvRepositoryImpl(
         return artistImagesDao.observe(mbid)
             .mapNotNull { artistImages ->
                 if (artistImages == null) {
-                    updateArtistImagesFromNetwork(mbid)
+                    getArtistImagesFromNetwork(mbid)
                 }
                 artistImages
             }
     }
 
-    private suspend fun updateArtistImagesFromNetwork(mbid: String) {
+    private suspend fun getArtistImagesFromNetwork(mbid: String) {
         withContext(dispatcher) {
             rateLimiter.startOperation()
             try {

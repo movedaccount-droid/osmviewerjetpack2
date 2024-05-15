@@ -3,7 +3,6 @@ package ac.uk.hope.osmviewerjetpack.displayables.search
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
 import ac.uk.hope.osmviewerjetpack.util.TAG
 import android.net.Uri
 import android.util.Log
@@ -19,15 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val PAGE_SIZE = 15
-// TODO: replace with a sane, local default
-val BACKUP_IMAGE_URI: Uri = Uri.parse(
-    Uri.decode(
-        "https://www.svgrepo.com/show/401366/cross-mark-button.svg"
-    )
-)
 
 @HiltViewModel
-class ArtistListViewModel
+class ArtistSearchViewModel
 @Inject constructor(
     private val musicBrainzRepository: MusicBrainzRepository,
     private val fanartTvRepository: FanartTvRepository

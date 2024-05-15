@@ -3,6 +3,7 @@ package ac.uk.hope.osmviewerjetpack.displayables
 import ac.uk.hope.osmviewerjetpack.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
@@ -17,6 +18,8 @@ interface ScreenDestination {
     val route: String
 }
 
+private val uriPrefix = "musicbrainzviewer://"
+
 object Home: ScreenDestination {
     override val icon = Icons.Default.Home
     override val iconDesc = R.string.home_icon_desc
@@ -28,15 +31,31 @@ object ArtistSearch: ScreenDestination {
     override val iconDesc = R.string.search_icon_desc
     override val route = "search"
     const val queryArg = "query"
-    val routeWithArgs = "${route}/{${queryArg}}"
+    val routeWithArgs = "$route/{$queryArg}"
     val arguments = listOf(
         navArgument(queryArg) {
             type = NavType.StringType
         }
     )
     val deepLinks = listOf(navDeepLink {
-        uriPattern = "musicbrainzviewer://$routeWithArgs"
+        uriPattern = "$uriPrefix$routeWithArgs"
     })
 }
 
-val bottomBarScreenDestinations = listOf(Home, ArtistSearch)
+object ArtistView: ScreenDestination {
+    override val icon = Icons.Default.Person
+    override val iconDesc = R.string.artist_icon_desc
+    override val route = "artist"
+    const val mbidArg = "mbid"
+    val routeWithArgs = "$route/{$mbidArg}"
+    val arguments = listOf(
+        navArgument(mbidArg) {
+            type = NavType.StringType
+        }
+    )
+    val deepLinks = listOf(navDeepLink {
+        uriPattern = "$uriPrefix$routeWithArgs"
+    })
+}
+
+val bottomBarScreenDestinations = listOf(Home, ArtistSearch, ArtistView)

@@ -34,8 +34,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // TODO: everyone seems to talk about injecting the base application
-    // and i have no idea when we might need it
+    // everyone seems to talk about injecting the base application
+    // and i have no idea when we might need it.
     @Provides
     @Singleton
     fun provideApplication(@ApplicationContext app: Context): BaseApplication {

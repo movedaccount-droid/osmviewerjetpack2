@@ -1,10 +1,11 @@
 package ac.uk.hope.osmviewerjetpack.displayables.scaffold
 
 import ac.uk.hope.osmviewerjetpack.displayables.ArtistSearch
+import ac.uk.hope.osmviewerjetpack.displayables.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.Home
+import ac.uk.hope.osmviewerjetpack.displayables.artist.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.home.HomeScreen
-import ac.uk.hope.osmviewerjetpack.displayables.search.ArtistList
-import androidx.compose.foundation.layout.padding
+import ac.uk.hope.osmviewerjetpack.displayables.search.ArtistSearch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -30,9 +31,23 @@ fun MBVNavHost(
             arguments = ArtistSearch.arguments,
             deepLinks = ArtistSearch.deepLinks
         ) { navBackStackEntry ->
-            val query = navBackStackEntry.arguments?.getString(ArtistSearch.queryArg)
+            // this should never be null, so if it is i want to know why
+            val query = navBackStackEntry.arguments?.getString(ArtistSearch.queryArg)!!
             // TODO: eventually pass navcontroller down for searching
-            ArtistList(query!!) // this should never be null, so if it is i want to know why
+            ArtistSearch(
+                query = query,
+                onArtistSelected = { mbid ->
+                    navController.navigateToArtist(mbid)
+                }
+            )
+        }
+        composable(
+            route = ArtistView.routeWithArgs,
+            arguments = ArtistView.arguments,
+            deepLinks = ArtistView.deepLinks
+        ) { navBackStackEntry ->
+            val mbid = navBackStackEntry.arguments?.getString(ArtistView.mbidArg)
+            ArtistView(mbid!!) // this should never be null, so if it is i want to know why
         }
     }
 }
@@ -54,4 +69,8 @@ fun NavHostController.navigateSingleTopTo(route: String) =
 
 fun NavHostController.navigateToSearch(query: String) {
     this.navigate("${ArtistSearch.route}/$query")
+}
+
+fun NavHostController.navigateToArtist(mbid: String) {
+    this.navigate("${ArtistView.route}/$mbid")
 }

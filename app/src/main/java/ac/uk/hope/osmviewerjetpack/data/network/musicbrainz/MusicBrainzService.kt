@@ -1,7 +1,9 @@
 package ac.uk.hope.osmviewerjetpack.data.network.musicbrainz
 
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.ArtistNetwork
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.MusicBrainzArtistSearchResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 // providing the api behind a set of suspend functions, so we have to call these via coroutines
@@ -16,4 +18,9 @@ interface MusicBrainzService {
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?
     ) : MusicBrainzArtistSearchResponse
+
+    @GET("artist/{mbid}")
+    suspend fun getArtist(
+        @Path("mbid") mbid: String
+    ): ArtistNetwork
 }

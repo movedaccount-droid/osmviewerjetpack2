@@ -12,6 +12,3 @@ data class FanartTvArtistResponseLocal(
     val artist: ArtistImagesLocal,
     val albums: List<AlbumImagesLocal>?
 )
-
-// TODO: we currently never need to convert back to network so we don't have these functions.
-// but we might eventually need them
