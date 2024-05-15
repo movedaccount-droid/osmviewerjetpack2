@@ -71,12 +71,7 @@ fun ArtistSearch(
             SearchResultListItem(
                 image = viewModel.images[artist.mbid],
                 headline = artist.name,
-                subhead = artist.disambiguation
-                    ?: artist.type
-                    ?: artist.area?.name
-                    ?: artist.beginArea?.name
-                    // TODO: this leads to nasty formatting, should just be nullable
-                    ?: "",
+                subhead = artist.shortDesc,
                 onClick = { onArtistSelected(artist.mbid) }
             )
         }

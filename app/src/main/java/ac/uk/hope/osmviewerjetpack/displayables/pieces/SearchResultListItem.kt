@@ -31,14 +31,18 @@ import coil.request.ImageRequest
 fun SearchResultListItem(
     image: Uri?,
     headline: String,
-    subhead: String,
+    subhead: String?,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     Column {
         ListItem(
             headlineContent = { Text(headline) },
-            supportingContent = { Text(subhead) },
+            supportingContent = {
+                subhead?.let {
+                    Text(subhead)
+                }
+            },
             trailingContent = {
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -46,17 +50,8 @@ fun SearchResultListItem(
                 )
             },
             leadingContent = {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(image)
-                        .build(),
-                    placeholder = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = "some",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(72.dp, 72.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    onError = { err -> err.result.throwable.message?.let { it1 -> Log.d(TAG, it1) } }
+                IconImage(
+                    image = image
                 )
             },
             modifier = modifier.clickable(
@@ -81,6 +76,22 @@ private fun PreviewSearchResultListItem() {
             ),
             headline = "Radiohead",
             subhead = "pre‐Radiohead group, until 1991",
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewSearchResultListItemNoDesc() {
+    OSMViewerJetpackTheme {
+        SearchResultListItem(
+            image = Uri.parse(
+                Uri.decode(
+                    "https://assets.fanart.tv/fanart/music/a9100753-f539-43cf-bcc9-579566fb512e/artistthumb/simply-red-4fded0c91fe47.jpg"
+                )
+            ),
+            headline = "Radiohead",
+            subhead = null,
         )
     }
 }

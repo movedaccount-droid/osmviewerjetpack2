@@ -34,7 +34,7 @@ fun ArtistNetwork.toLocal() = ArtistWithRelationsLocal(
         country = country,
         disambiguation = disambiguation,
         lifeSpan = lifeSpan.toLocal(),
-        tags = tags?.toLocal(),
+        tags = tags?.toLocal() ?: mapOf(),
         areaMbid = area?.id,
         beginAreaMbid = beginArea?.id
     ),

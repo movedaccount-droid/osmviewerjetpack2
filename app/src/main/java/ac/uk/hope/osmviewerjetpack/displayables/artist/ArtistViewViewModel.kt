@@ -1,5 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.artist
 
+import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.ArtistImages
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
@@ -18,11 +19,21 @@ class ArtistViewViewModel
 ): ViewModel() {
 
     val artist = mutableStateOf<Artist?>(null)
+    val artistImages = mutableStateOf<ArtistImages?>(null)
 
     fun getArtist(mbid: String) {
+        getArtistImages(mbid)
         viewModelScope.launch {
             musicBrainzRepository.getArtist(mbid).collect {
                 artist.value = it
+            }
+        }
+    }
+
+    private fun getArtistImages(mbid: String) {
+        viewModelScope.launch{
+            fanartTvRepository.getArtistImages(mbid).collect {
+                artistImages.value = it
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import java.util.SortedMap
 
 
 data class ArtistWithRelationsLocal(
@@ -45,7 +46,7 @@ data class ArtistLocal(
     val sortName: String,
     val country: String?,
     val disambiguation: String?,
-    val tags: Map<String, Int>?,
+    val tags: Map<String, Int>,
     val cacheTimestamp: Long = System.currentTimeMillis()
 )
 
