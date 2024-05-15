@@ -1,19 +1,10 @@
-package ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model
+package ac.uk.hope.osmviewerjetpack.data.local.util
 
-import ac.uk.hope.osmviewerjetpack.util.TAG
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.TypeLocal
 import android.net.Uri
-import android.util.Log
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializationContext
-import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
 
 class Converters {
 
@@ -44,6 +35,18 @@ class Converters {
     @TypeConverter
     fun jsonToNullableStringIntMap(value: String): Map<String, Int>? {
         val type = object : TypeToken<Map<String, Int>?>(){}.type
+        return Gson().fromJson(value, type)
+    }
+
+    // types list
+    @TypeConverter
+    fun typesListToJson(value: List<TypeLocal>): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToTypesList(value: String): List<TypeLocal> {
+        val type = object : TypeToken<List<TypeLocal>>(){}.type
         return Gson().fromJson(value, type)
     }
 

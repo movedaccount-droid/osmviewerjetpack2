@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
 import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
@@ -29,6 +30,7 @@ class MusicBrainzRepositoryImpl(
 
     private val rateLimiter = RateLimiter(1000)
 
+    // search for artists by name
     override fun searchArtistsName(
         query: String,
         limit: Int,
@@ -53,6 +55,7 @@ class MusicBrainzRepositoryImpl(
         return f
     }
 
+    // lookup artist by mbid
     override fun getArtist(mbid: String): Flow<Artist> {
         return artistDao.observe(mbid)
             .mapNotNull{ artist ->
@@ -61,6 +64,10 @@ class MusicBrainzRepositoryImpl(
                 }
                 artist?.toExternal()
             }
+    }
+
+    override fun getArtistReleaseGroups(mbid: String): Flow<List<ReleaseGroup>> {
+        TODO("Not yet implemented")
     }
 
     private suspend fun getArtistFromNetwork(mbid: String) {

@@ -1,6 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz
 
-import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.Converters
+import ac.uk.hope.osmviewerjetpack.data.local.util.Converters
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal

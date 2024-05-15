@@ -4,7 +4,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.AlbumImagesDao
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.ArtistImagesDao
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.AlbumImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.ArtistImagesLocal
-import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.Converters
+import ac.uk.hope.osmviewerjetpack.data.local.util.Converters
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
