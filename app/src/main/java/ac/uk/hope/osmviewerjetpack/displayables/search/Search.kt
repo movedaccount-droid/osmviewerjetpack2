@@ -1,6 +1,5 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
-import ac.uk.hope.osmviewerjetpack.displayables.pieces.SearchResultListItem
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -23,19 +22,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
+// generic search results component.
+// retrieves paginated SearchResults from a SearchViewSearcher, which can be extended
+// to provide any api request. after retrieval, images are loaded one-by-one,
+// prioritized by what is on-screen through the same object. items tapped return their id through
+// a callback.
+
 @Composable
-fun ArtistSearch(
-    query: String,
-    onArtistSelected: (String) -> Unit = {}
+fun Search(
+    searcher: SearchViewSearcher,
+    onItemSelected: (String) -> Unit = {}
 ) {
 
-    val viewModel: ArtistSearchViewModel = hiltViewModel()
+    val viewModel: SearchViewModel = hiltViewModel()
     val listState = rememberLazyListState()
 
     // LaunchedEffect runs when its given dependency changes.
     // therefore Unit forces it to only run once
     LaunchedEffect(Unit) {
-        viewModel.sendQuery(query)
+        viewModel.applySearcher(searcher)
+        viewModel.getNextPage()
     }
 
     // for some reason combining these makes only the first flow run. weird
@@ -67,12 +73,12 @@ fun ArtistSearch(
     LazyColumn(
         state = listState
     ) {
-        items(viewModel.artists) {artist ->
+        items(viewModel.results) { result ->
             SearchResultListItem(
-                image = viewModel.images[artist.mbid],
-                headline = artist.name,
-                subhead = artist.shortDesc,
-                onClick = { onArtistSelected(artist.mbid) }
+                image = viewModel.images[result.id],
+                headline = result.name,
+                subhead = result.desc,
+                onClick = { onItemSelected(result.id) }
             )
         }
         if (viewModel.endOfResults.value) {
@@ -102,13 +108,5 @@ fun ArtistSearch(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewArtistList() {
-    OSMViewerJetpackTheme {
-        ArtistSearch("red")
     }
 }

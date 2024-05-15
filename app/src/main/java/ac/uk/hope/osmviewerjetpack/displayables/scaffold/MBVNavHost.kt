@@ -5,7 +5,8 @@ import ac.uk.hope.osmviewerjetpack.displayables.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.Home
 import ac.uk.hope.osmviewerjetpack.displayables.artist.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.home.HomeScreen
-import ac.uk.hope.osmviewerjetpack.displayables.search.ArtistSearch
+import ac.uk.hope.osmviewerjetpack.displayables.search.Search
+import ac.uk.hope.osmviewerjetpack.displayables.search.artist.ArtistSearch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController

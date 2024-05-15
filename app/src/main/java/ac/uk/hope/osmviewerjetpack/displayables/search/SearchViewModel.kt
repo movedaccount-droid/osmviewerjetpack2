@@ -1,11 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
-import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
-import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
-import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
-import ac.uk.hope.osmviewerjetpack.util.TAG
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,34 +8,33 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val PAGE_SIZE = 15
+class SearchViewModel: ViewModel() {
 
-@HiltViewModel
-class ArtistSearchViewModel
-@Inject constructor(
-    private val musicBrainzRepository: MusicBrainzRepository,
-    private val fanartTvRepository: FanartTvRepository
-): ViewModel() {
+    private lateinit var searcher: SearchViewSearcher
 
-    val artists = mutableStateListOf<Artist>()
+    val results = mutableStateListOf<SearchResult>()
     val images = mutableStateMapOf<String, Uri?>()
     val loading = mutableStateOf(false)
     val endOfResults = mutableStateOf(false)
 
-    private var query = ""
     private var page = 0
     private var firstVisibleItem = 0
     private var lastVisibleItem = 0
     private var imageLoadingChainActive = false
 
+    // provide searcher. i think this architecture is generally gross... there's probably a better
+    // way to genericize viewmodels than this
+    fun applySearcher(newSearcher: SearchViewSearcher) {
+        searcher = newSearcher
+    }
+
     // update the first visible item, used to prioritize image loading
     fun onFirstVisibleItemChanged(firstItem: Int) {
         firstVisibleItem = firstItem
-        startImageLoadingChain()
+        startIconLoadingChain()
     }
 
     // update the last visible item, see above
@@ -48,28 +42,18 @@ class ArtistSearchViewModel
         // note that the incoming value is not the last index! it is the last of what is on screen
         // i.e. if there are 30 items but only 9 can be seen, this will still always be between 0-9
         lastVisibleItem = firstVisibleItem + lastLoadedItem
-        startImageLoadingChain()
+        startIconLoadingChain()
     }
 
-    fun sendQuery(newQuery: String) {
-        query = newQuery
-        getNextPage()
-    }
-
-    // get next page of musicbrainz results
+    // get next page of results from searcher
     fun getNextPage() {
-        Log.d(TAG, "next page called")
         if (!loading.value && !endOfResults.value) {
             viewModelScope.launch {
-                val dataResult = musicBrainzRepository.searchArtistsName(
-                    query = query,
-                    limit = PAGE_SIZE,
-                    offset = PAGE_SIZE * page
-                ).collect {
-                    artists.addAll(it)
-                    endOfResults.value = it.size < PAGE_SIZE
+                searcher.getPage(page).collect {
+                    results.addAll(it)
+                    endOfResults.value = it.size < searcher.pageSize
                     loading.value = false
-                    startImageLoadingChain()
+                    startIconLoadingChain()
                 }
             }
             loading.value = true
@@ -81,35 +65,34 @@ class ArtistSearchViewModel
     // we start a chain, load an image, await the response and then load another.
     // there are probably better ways to do this that would allow loading all cached images
     // immediately. but i can't think of them without this getting Very Complicated.
-    private fun startImageLoadingChain() {
-        if (!imageLoadingChainActive && !artists.isEmpty()) {
+    private fun startIconLoadingChain() {
+        if (!imageLoadingChainActive && !results.isEmpty()) {
             imageLoadingChainActive = true
             viewModelScope.launch {
-                loadNeededArtistImage()
+                loadNeededImage()
             }
         }
     }
 
     // retrieve local/network image for single artist
-    private fun makeArtistImageRequest(mbid: String) {
+    private fun makeIconRequest(id: String) {
         viewModelScope.launch {
-            fanartTvRepository.getArtistImages(mbid)
-                .map { it.thumbnail }
+            searcher.getIcon(id)
                 .distinctUntilChanged()
                 .collect {
-                    images[mbid] = it
-                    loadNeededArtistImage()
+                    images[id] = it
+                    loadNeededImage()
                 }
         }
     }
 
     // only load images that are currently on screen.
-    private fun loadNeededArtistImage() {
-        val neededArtistImage = artists.subList(firstVisibleItem, lastVisibleItem).find {
-            images[it.mbid] == null
+    private fun loadNeededImage() {
+        val neededArtistImage = results.subList(firstVisibleItem, lastVisibleItem).find {
+            images[it.id] == null
         }
         if (neededArtistImage != null) {
-            makeArtistImageRequest(neededArtistImage.mbid)
+            makeIconRequest(neededArtistImage.id)
         } else {
             imageLoadingChainActive = false
         }
