@@ -10,11 +10,14 @@ data class LifeSpanNetwork(
     val ended: Boolean?,
 )
 
-fun LifeSpanNetwork.toLocal() =
-    ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.LifeSpanLocal(
+fun LifeSpanNetwork.toLocal() = if (
+    begin == null
+    && end == null
+    && ended == null
+    ) null else LifeSpanLocal(
         begin = begin,
         end = end,
-        ended = ended
+        ended = ended ?: (end != null)
     )
 
 fun List<LifeSpanNetwork>.toLocal() = map(LifeSpanNetwork::toLocal)

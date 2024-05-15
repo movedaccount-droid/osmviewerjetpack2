@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName
 // really be.
 
 data class FanartTvArtistResponseLocal(
-    val artist: ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.ArtistImagesLocal,
-    val albums: List<ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.AlbumImagesLocal>?
+    val artist: ArtistImagesLocal,
+    val albums: List<AlbumImagesLocal>?
 )
 
 // TODO: we currently never need to convert back to network so we don't have these functions.

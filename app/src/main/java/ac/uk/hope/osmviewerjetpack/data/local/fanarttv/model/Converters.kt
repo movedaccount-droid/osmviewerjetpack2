@@ -17,7 +17,8 @@ import java.lang.reflect.Type
 
 class Converters {
 
-    // room can't store lists, so we convert to string list format and serialize as json. ow!
+    // room can't store lists and gson can't serialize the abstract uri class,
+    // so we convert to string list format and serialize as json. ow!
     // https://stackoverflow.com/questions/44986626/android-room-database-how-to-handle-arraylist-in-an-entity
 
     @TypeConverter
@@ -32,6 +33,18 @@ class Converters {
             .fromJson<List<String>>(value, type)
             .map(Uri::decode)
             .map(Uri::parse)
+    }
+
+    // tags map
+    @TypeConverter
+    fun nullableStringIntMapToJson(value: Map<String, Int>?): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToNullableStringIntMap(value: String): Map<String, Int>? {
+        val type = object : TypeToken<Map<String, Int>?>(){}.type
+        return Gson().fromJson(value, type)
     }
 
 }

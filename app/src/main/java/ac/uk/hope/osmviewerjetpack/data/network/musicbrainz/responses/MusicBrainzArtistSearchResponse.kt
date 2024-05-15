@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses
 
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.ArtistNetwork
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.toLocal
 import kotlinx.serialization.Serializable
 
 // model for the api response, which we will then pass to the repository mappers for parsing
@@ -12,3 +13,5 @@ data class MusicBrainzArtistSearchResponse (
     val offset: Int,
     val artists: List<ArtistNetwork>
 )
+
+fun MusicBrainzArtistSearchResponse.toLocal() = artists.map(ArtistNetwork::toLocal)

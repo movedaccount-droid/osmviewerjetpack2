@@ -5,10 +5,12 @@ import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRep
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepositoryImpl
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepositoryImpl
-import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.FanartTvDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.AlbumImagesDao
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.ArtistImagesDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.MusicBrainzDatabase
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
 import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.FanartTvService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.util.HTTP_LOGGING_LEVEL
@@ -53,10 +55,31 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideMusicBrainzDatabase(@ApplicationContext context: Context): MusicBrainzDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            MusicBrainzDatabase::class.java,
+            "MusicBrainz.db"
+        ).build()
+    }
+
+    @Provides
+    fun provideArtistDao(database: MusicBrainzDatabase): ArtistDao
+        = database.artistDao()
+
+    @Provides
+    fun provideAreaDao(database: MusicBrainzDatabase): AreaDao
+            = database.areaDao()
+
+    @Provides
+    @Singleton
     fun provideMusicBrainzRepository(
-        service: MusicBrainzService
+        artistDao: ArtistDao,
+        areaDao: AreaDao,
+        service: MusicBrainzService,
+        @DefaultDispatcher dispatcher: CoroutineDispatcher,
     ): MusicBrainzRepository {
-        return MusicBrainzRepositoryImpl(service)
+        return MusicBrainzRepositoryImpl(artistDao, areaDao, service, dispatcher)
     }
 
     @Provides
@@ -75,13 +98,13 @@ object AppModule {
 
     }
 
-    @Singleton
     @Provides
-    fun provideFanartTvDataBase(@ApplicationContext context: Context): FanartTvDatabase {
+    @Singleton
+    fun provideFanartTvDatabase(@ApplicationContext context: Context): FanartTvDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             FanartTvDatabase::class.java,
-            "Images.db"
+            "FanartTV.db"
         ).build()
     }
 

@@ -1,29 +1,65 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 
-// artist data/domain layer representations
 
-// we store our api data as parcelable, so we can push them with intents.
-// this way we can push data to layouts instead of having them request it themselves every time
-// TODO: we should actually make sure we need parcelable functionality
+data class ArtistWithRelationsLocal(
+    @Embedded val artist: ArtistLocal,
+    @Relation(
+        parentColumn = "areaMbid",
+        entityColumn = "mbid"
+    )
+    val area: AreaLocal?,
+    @Relation(
+        parentColumn = "beginAreaMbid",
+        entityColumn = "mbid"
+    )
+    val beginArea: AreaLocal?,
+)
 
-// this also fits the definitions of
-// https://developer.android.com/codelabs/basic-android-kotlin-compose-getting-data-internet#7
-
-@Parcelize
+@Entity(
+    tableName = "artists"
+)
 data class ArtistLocal(
-    val id: String,
-    val type: String?,
-    val typeId: String?,
-    val score: Int,
+    @PrimaryKey val mbid: String,
+
+    // we could split out types into their own table, since they have an mbid, which would allow
+    // more complex queries. but room runs an additional query per related object, and since areas
+    // also have types, we would be running six queries to retrieve a single artist. which is bad
+    // so we keep it embedded, unless we ever need this
+    @Embedded val type: TypeLocal?,
+
+    // lifespan on the other hand has no mbid, so it's always embedded
+    @Embedded val lifeSpan: LifeSpanLocal?,
+
+    // foreign key lookups
+    val areaMbid: String?,
+    val beginAreaMbid: String?,
+
     val name: String,
     val sortName: String,
     val country: String?,
-    val area: ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal?,
-    val beginArea: ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal?,
     val disambiguation: String?,
-    val lifeSpan: ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.LifeSpanLocal,
-    val tags: List<String>?
-) : Parcelable
+    val tags: Map<String, Int>?,
+    val cacheTimestamp: Long = System.currentTimeMillis()
+)
+
+fun ArtistWithRelationsLocal.toExternal() = Artist(
+    mbid = artist.mbid,
+    type = artist.type?.toExternal(),
+    name = artist.name,
+    sortName = artist.sortName,
+    country = artist.country,
+    area = area?.toExternal(),
+    beginArea = beginArea?.toExternal(),
+    disambiguation = artist.disambiguation,
+    lifeSpan = artist.lifeSpan?.toExternal(),
+    tags = artist.tags
+)
+
+fun List<ArtistWithRelationsLocal>.toExternal() = map(ArtistWithRelationsLocal::toExternal)

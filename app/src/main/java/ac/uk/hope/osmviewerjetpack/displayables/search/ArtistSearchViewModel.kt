@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
 import ac.uk.hope.osmviewerjetpack.util.TAG
@@ -15,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 import javax.inject.Inject
 
 const val PAGE_SIZE = 15
@@ -33,7 +33,7 @@ class ArtistListViewModel
     private val fanartTvRepository: FanartTvRepository
 ): ViewModel() {
 
-    val artists = mutableStateListOf<ArtistLocal>()
+    val artists = mutableStateListOf<Artist>()
     val images = mutableStateMapOf<String, Uri?>()
     val loading = mutableStateOf(false)
     val endOfResults = mutableStateOf(false)
@@ -72,11 +72,12 @@ class ArtistListViewModel
                     query = query,
                     limit = PAGE_SIZE,
                     offset = PAGE_SIZE * page
-                )
-                artists.addAll(dataResult)
-                endOfResults.value = dataResult.size < PAGE_SIZE
-                loading.value = false
-                startImageLoadingChain()
+                ).collect {
+                    artists.addAll(it)
+                    endOfResults.value = it.size < PAGE_SIZE
+                    loading.value = false
+                    startImageLoadingChain()
+                }
             }
             loading.value = true
             page += 1
@@ -112,10 +113,10 @@ class ArtistListViewModel
     // only load images that are currently on screen.
     private fun loadNeededArtistImage() {
         val neededArtistImage = artists.subList(firstVisibleItem, lastVisibleItem).find {
-            images[it.id] == null
+            images[it.mbid] == null
         }
         if (neededArtistImage != null) {
-            makeArtistImageRequest(neededArtistImage.id)
+            makeArtistImageRequest(neededArtistImage.mbid)
         } else {
             imageLoadingChainActive = false
         }
