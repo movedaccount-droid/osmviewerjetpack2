@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
@@ -52,10 +53,9 @@ fun Search(
         val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex
         if (lastVisibleId >= 0) {
             viewModel.updateVisibleIds(
-                lazyPagingItems.itemSnapshotList.subList(
-                    firstVisibleId,
-                    lastVisibleId
-                ).map { it!!.id } // our root list isn't nullable. when will this ever be null??
+                (firstVisibleId..lastVisibleId).map {
+                    lazyPagingItems.peek(it)!!.id // our root list isn't nullable. when will this ever be null??
+                }
             )
         }
     }
@@ -76,7 +76,10 @@ fun Search(
     LazyColumn(
         state = viewModel.listState
     ) {
-        items(count = lazyPagingItems.itemCount) { index ->
+        items(
+            count = lazyPagingItems.itemCount,
+            key = lazyPagingItems.itemKey { it.id }
+        ) { index ->
             val result = lazyPagingItems[index]!!
             SearchResultListItem(
                 image = viewModel.images[result.id],

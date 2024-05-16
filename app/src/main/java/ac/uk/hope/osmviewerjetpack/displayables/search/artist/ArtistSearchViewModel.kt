@@ -25,7 +25,9 @@ class ArtistSearchViewModel
 ): ViewModel() {
 
     val flow = Pager(
-        PagingConfig(pageSize = 15)
+        PagingConfig(
+            pageSize = 15,
+            )
     ) {
         pagingSourceFactory.create(query)
     }.flow.cachedIn(viewModelScope).map { pagingData ->
