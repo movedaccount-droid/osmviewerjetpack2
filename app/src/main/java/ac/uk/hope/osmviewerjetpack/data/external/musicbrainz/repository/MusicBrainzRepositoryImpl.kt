@@ -10,6 +10,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
+import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
 import ac.uk.hope.osmviewerjetpack.util.TAG
 import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,11 +26,9 @@ class MusicBrainzRepositoryImpl(
     private val artistDao: ArtistDao,
     private val areaDao: AreaDao,
     private val service: MusicBrainzService,
-    // private val rateLimiter: RateLimiter,
+    @MusicBrainzLimiter private val rateLimiter: RateLimiter,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ): MusicBrainzRepository {
-
-    private val rateLimiter = RateLimiter(1000)
 
     // search for artists by name
     override fun searchArtistsName(

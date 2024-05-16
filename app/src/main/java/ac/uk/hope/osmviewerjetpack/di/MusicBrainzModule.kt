@@ -2,6 +2,7 @@ package ac.uk.hope.osmviewerjetpack.di
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepositoryImpl
+import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.MusicBrainzDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
@@ -16,7 +17,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class MusicBrainzLimiter
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -25,7 +31,6 @@ class MusicBrainzModule {
     @Provides
     @Singleton
     fun provideMusicBrainzService(): MusicBrainzService {
-
         val httpBuilder = getBaseHttpClientBuilder(mapOf("Accept" to "application/json"))
         return getBaseRetrofitBuilder("https://musicbrainz.org/ws/2/", httpBuilder)
             .build()
@@ -53,13 +58,20 @@ class MusicBrainzModule {
 
     @Provides
     @Singleton
+    @MusicBrainzLimiter
+    fun provideMusicBrainzLimiter(): RateLimiter
+            = RateLimiter(1000)
+
+    @Provides
+    @Singleton
     fun provideMusicBrainzRepository(
         artistDao: ArtistDao,
         areaDao: AreaDao,
         service: MusicBrainzService,
+        @MusicBrainzLimiter rateLimiter: RateLimiter,
         @DefaultDispatcher dispatcher: CoroutineDispatcher,
     ): MusicBrainzRepository {
-        return MusicBrainzRepositoryImpl(artistDao, areaDao, service, dispatcher)
+        return MusicBrainzRepositoryImpl(artistDao, areaDao, service, rateLimiter, dispatcher)
     }
 
 }

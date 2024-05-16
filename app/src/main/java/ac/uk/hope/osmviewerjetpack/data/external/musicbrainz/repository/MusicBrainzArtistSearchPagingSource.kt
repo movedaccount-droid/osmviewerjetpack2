@@ -6,6 +6,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelati
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.toLocal
+import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import dagger.assisted.Assisted
@@ -19,7 +20,7 @@ import java.io.IOException
 class MusicBrainzArtistSearchPagingSource
 @AssistedInject constructor(
     private val service: MusicBrainzService,
-    // private val rateLimiter: RateLimiter,
+    @MusicBrainzLimiter private val rateLimiter: RateLimiter,
     @Assisted private val query: String
 ): PagingSource<Int, Artist>() {
 
@@ -34,6 +35,7 @@ class MusicBrainzArtistSearchPagingSource
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Artist> {
         // TODO: this try-catch is taken straight from the codelab. we should check this and
         // make sure we cover everything we need [and don't cover anything we don't]
+        rateLimiter.startOperation()
         try {
             val nextPageNumber = params.key ?: 0
             val loadSize = minOf(params.loadSize, 100)
@@ -51,6 +53,8 @@ class MusicBrainzArtistSearchPagingSource
         } catch (e: HttpException) {
             // HttpException for any non-2xx HTTP status codes.
             return LoadResult.Error(e)
+        } finally {
+            rateLimiter.endOperationAndLimit()
         }
     }
 }
