@@ -1,19 +1,45 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzArtistSearchPagingSource
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzArtistSearchPagingSourceFactory
 import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchViewModel: ViewModel() {
+@HiltViewModel
+class SearchViewModel
+@Inject constructor(
+    private val pagingSourceFactory: MusicBrainzArtistSearchPagingSourceFactory
+): ViewModel() {
 
     private lateinit var searcher: SearchViewSearcher
+
+    val flow = Pager(
+        PagingConfig(pageSize = 15)
+    ) {
+        pagingSourceFactory.create("radiohead")
+    }.flow.cachedIn(viewModelScope).map { pagingData ->
+        pagingData.map {
+            SearchResult(
+                id = it.mbid,
+                name = it.name,
+                desc = it.shortDesc
+            )
+        }
+    }
 
     val results = mutableStateListOf<SearchResult>()
     val images = mutableStateMapOf<String, Uri?>()
