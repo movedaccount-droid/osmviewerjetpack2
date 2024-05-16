@@ -33,8 +33,9 @@ class AlbumSearchViewSearcher(
     }
 
     override fun getIcon(id: String): Flow<Uri> {
-        return fanartTvRepository.getAlbumImages(id)
-            .map { it.thumbnail }
+        TODO("converting to paging three. ougghhhhh")
+//        return fanartTvRepository.getAlbumImages(id)
+//            .map { it.thumbnail }
     }
 
 }

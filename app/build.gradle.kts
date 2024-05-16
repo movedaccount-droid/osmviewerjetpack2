@@ -79,6 +79,8 @@ dependencies {
     implementation(libs.logging.interceptor) // okhttp logging, for debugging retrofit calls
     implementation(libs.coil) // asynchronous image loading
     implementation(libs.coil.compose) // coil jetpack support
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     implementation(libs.hilt.android) // hilt, and kapt annotation compiler
     kapt(libs.hilt.compiler)
     androidTestImplementation (libs.hilt.android.testing)

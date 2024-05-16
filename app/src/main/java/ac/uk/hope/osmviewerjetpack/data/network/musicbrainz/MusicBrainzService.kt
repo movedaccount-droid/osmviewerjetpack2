@@ -15,8 +15,8 @@ interface MusicBrainzService {
     @GET("artist")
     suspend fun searchArtists(
         @Query("query") query: String,
-        @Query("limit") limit: Int?,
-        @Query("offset") offset: Int?
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
     ) : MusicBrainzArtistSearchResponse
 
     @GET("artist/{mbid}")
