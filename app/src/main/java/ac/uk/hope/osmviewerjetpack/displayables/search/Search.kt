@@ -1,6 +1,8 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
+import ac.uk.hope.osmviewerjetpack.util.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.filter
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.onEach
 
 // generic search results component.
 // retrieves paginated SearchResults from a SearchViewSearcher, which can be extended
@@ -31,49 +40,53 @@ import kotlinx.coroutines.flow.filter
 @Composable
 fun Search(
     searcher: SearchViewSearcher,
+    resultFlow: Flow<PagingData<SearchResult>>,
     onItemSelected: (String) -> Unit = {}
 ) {
 
-    val viewModel: SearchViewModel = hiltViewModel()
-    val listState = rememberLazyListState()
+    val viewModel =
+        hiltViewModel<SearchViewModel, SearchViewModel.SearchViewModelFactory> { factory ->
+        factory.create(searcher, resultFlow)
+    }
+    val lazyPagingItems = resultFlow.collectAsLazyPagingItems()
 
-    // LaunchedEffect runs when its given dependency changes.
-    // therefore Unit forces it to only run once
-    LaunchedEffect(Unit) {
-        viewModel.applySearcher(searcher)
-        viewModel.getNextPage()
+    // this sucks. we can only index the paged items from our lazypageditems,
+    // which we can only instantiate in the composable.
+    // this isn't technically business logic but i'm still not happy
+    fun recalculateVisibleIds() {
+        // since we're using a lazylist, items are unloaded as we scroll forward.
+        // lastindex refers to loaded items, not items in the list!
+        val firstVisibleId = viewModel.listState.firstVisibleItemIndex
+        val lastVisibleId =
+            firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex
+        if (lastVisibleId < 0) return
+        viewModel.updateVisibleIds(
+            lazyPagingItems.itemSnapshotList.subList(
+                firstVisibleId,
+                lastVisibleId
+            ).map { it!!.id } // our root list isn't nullable. when will this ever be null??
+        )
     }
 
-    // for some reason combining these makes only the first flow run. weird
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
+    // TODO: we can surely use a lesser heuristic to identify when to recheck what is visible
+    // on-screen...
+    LaunchedEffect(viewModel.listState) {
+        snapshotFlow { viewModel.listState.firstVisibleItemIndex }
             .distinctUntilChanged()
-            .collect {
-                index -> viewModel.onFirstVisibleItemChanged(index)
-            }
+            .collect { recalculateVisibleIds() }
     }
 
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastIndex }
+    LaunchedEffect(viewModel.listState) {
+        snapshotFlow { viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex }
             .distinctUntilChanged()
-            .collect {
-                index -> viewModel.onLastVisibleLoadedItemChanged(index)
-            }
-    }
-    
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.canScrollForward }
-            .distinctUntilChanged()
-            .filter { !it }
-            .collect {
-                viewModel.getNextPage()
-            }
+            .onEach { recalculateVisibleIds() }
     }
 
     LazyColumn(
-        state = listState
+        state = viewModel.listState
     ) {
-        items(viewModel.results) { result ->
+        items(count = lazyPagingItems.itemCount) { index ->
+            val result = lazyPagingItems[index]!!
             SearchResultListItem(
                 image = viewModel.images[result.id],
                 headline = result.name,
@@ -81,7 +94,7 @@ fun Search(
                 onClick = { onItemSelected(result.id) }
             )
         }
-        if (viewModel.endOfResults.value) {
+        if (lazyPagingItems.loadState.append.endOfPaginationReached) {
             item {
                 Row (
                     Modifier.fillMaxWidth(),
@@ -94,19 +107,24 @@ fun Search(
                     )
                 }
             }
-        } else if (viewModel.loading.value) {
+        }
+        if (lazyPagingItems.loadState.append == LoadState.Loading) {
             item {
                 Row (
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.width(16.dp).padding(16.dp),
+                        modifier = Modifier
+                            .width(16.dp)
+                            .padding(16.dp),
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     )
                 }
             }
+        } else {
+            recalculateVisibleIds()
         }
     }
 }

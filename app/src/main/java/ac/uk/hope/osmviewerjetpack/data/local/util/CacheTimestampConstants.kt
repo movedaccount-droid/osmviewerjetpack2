@@ -6,7 +6,7 @@ package ac.uk.hope.osmviewerjetpack.data.local.util
 // query. blugh
 
 const val MILLIS_PER_DAY = 86400000
-const val CACHE_TIMEOUT = ac.uk.hope.osmviewerjetpack.data.local.util.MILLIS_PER_DAY * 7
+const val CACHE_TIMEOUT = MILLIS_PER_DAY * 7
 
 val currentCacheTimeout
     get() = System.currentTimeMillis() - CACHE_TIMEOUT

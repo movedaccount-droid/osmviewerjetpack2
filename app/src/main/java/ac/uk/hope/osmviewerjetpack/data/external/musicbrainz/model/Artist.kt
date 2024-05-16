@@ -19,7 +19,6 @@ data class Artist(
         get() = disambiguation
             ?: type
             ?: tags.keys.joinToString(", ")
-            ?: area?.name
             ?: beginArea?.name
 
     val activeText

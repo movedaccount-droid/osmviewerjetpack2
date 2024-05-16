@@ -11,9 +11,15 @@ fun ArtistSearch(
     query: String,
     onArtistSelected: (mbid: String) -> Unit
 ) {
-    val viewModel: ArtistSearchViewModel = hiltViewModel()
+
+    val viewModel = hiltViewModel<ArtistSearchViewModel,
+            ArtistSearchViewModel.ArtistSearchViewModelFactory> { factory ->
+        factory.create(query)
+    }
+
     Search(
-        searcher = viewModel.getSearcher(query),
+        resultFlow = viewModel.flow,
+        searcher = viewModel.searcher,
         onItemSelected = onArtistSelected
     )
 }

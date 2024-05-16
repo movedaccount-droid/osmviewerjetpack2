@@ -11,7 +11,7 @@ fun getBaseHttpClientBuilder(headers: Map<String, String>): OkHttpClient.Builder
 
     // enabling logging
     val logging = HttpLoggingInterceptor()
-    logging.setLevel(HTTP_LOGGING_LEVEL);
+    logging.setLevel(HTTP_LOGGING_LEVEL)
     httpClient.addInterceptor(logging)
 
     // replacing headers

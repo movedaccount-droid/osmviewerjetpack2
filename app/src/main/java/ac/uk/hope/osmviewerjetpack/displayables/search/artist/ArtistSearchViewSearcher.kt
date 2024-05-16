@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ArtistSearchViewSearcher(
+    private val query: String,
     private val musicBrainzRepository: MusicBrainzRepository,
     private val fanartTvRepository: FanartTvRepository
 ): SearchViewSearcher {
 
     override val pageSize = 15
-    lateinit var query: String
 
     override fun getPage(page: Int): Flow<List<SearchResult>> {
         return musicBrainzRepository.searchArtistsName(
