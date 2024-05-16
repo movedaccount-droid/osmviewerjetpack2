@@ -2,6 +2,8 @@ package ac.uk.hope.osmviewerjetpack.displayables.search
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,8 +36,13 @@ import kotlinx.coroutines.flow.onEach
 fun Search(
     resultFlow: Flow<PagingData<SearchResult>>,
     getItemIcon: (id: String) -> Flow<Uri>,
-    onItemSelected: (id: String) -> Unit = {}
+    onItemSelected: (id: String) -> Unit = {},
+    header: (@Composable ColumnScope.() -> Unit)? = null
 ) {
+
+    Column {
+
+    }
 
     val viewModel =
         hiltViewModel<SearchViewModel, SearchViewModel.SearchViewModelFactory> { factory ->
@@ -49,8 +56,9 @@ fun Search(
     fun recalculateVisibleIds() {
         // since we're using a lazylist, items are unloaded as we scroll forward.
         // .lastIndex refers to loaded items, not items in the list!
-        val firstVisibleId = viewModel.listState.firstVisibleItemIndex
-        val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex
+        val offset = if (header == null) 0 else 1
+        val firstVisibleId = viewModel.listState.firstVisibleItemIndex - offset
+        val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex - offset
         // strange things happen when relaunching from the backstack, so do some extra checks
         if (firstVisibleId in 0..lastVisibleId
             && lastVisibleId in 0..<lazyPagingItems.itemCount
@@ -79,6 +87,13 @@ fun Search(
     LazyColumn(
         state = viewModel.listState
     ) {
+        header?.let {
+            item {
+                Column {
+                    it(this)
+                }
+            }
+        }
         items(
             count = lazyPagingItems.itemCount,
             key = lazyPagingItems.itemKey { it.id }

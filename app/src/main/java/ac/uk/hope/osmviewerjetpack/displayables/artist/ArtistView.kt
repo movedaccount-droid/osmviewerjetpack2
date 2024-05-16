@@ -27,18 +27,20 @@ fun ArtistView(
     ) {
         viewModel.artist.value?.also { artist ->
             // TODO: lazy scrollable row of image cards
-            ArtistViewDetail(
-                icon = viewModel.artistImages.value?.thumbnail,
-                name = artist.name,
-                desc = artist.shortDesc ?: "Artist",
-                area = artist.area?.name,
-                beginArea = artist.beginArea?.name,
-                active = artist.activeText,
-                tags = artist.sortedTags.joinToString(", ")
-            )
             ReleaseGroupLookupByArtist(
                 mbid = artist.mbid,
                 onAlbumSelected = {},
+                header = {
+                    ArtistViewDetail(
+                        icon = viewModel.artistImages.value?.thumbnail,
+                        name = artist.name,
+                        desc = artist.shortDesc ?: "Artist",
+                        area = artist.area?.name,
+                        beginArea = artist.beginArea?.name,
+                        active = artist.activeText,
+                        tags = artist.sortedTags.joinToString(", ")
+                    )
+                }
             )
         } ?: run {
             // TODO: loading icon in center of screen
