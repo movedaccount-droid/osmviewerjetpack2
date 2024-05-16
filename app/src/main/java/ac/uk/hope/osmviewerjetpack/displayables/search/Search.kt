@@ -51,10 +51,12 @@ fun Search(
         // .lastIndex refers to loaded items, not items in the list!
         val firstVisibleId = viewModel.listState.firstVisibleItemIndex
         val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex
-        if (lastVisibleId >= 0) {
+        // strange things happen when relaunching from the backstack, so do some extra checks
+        if (firstVisibleId in 0..lastVisibleId
+            && lastVisibleId in 0..lazyPagingItems.itemCount) {
             viewModel.updateVisibleIds(
                 (firstVisibleId..lastVisibleId).map {
-                    lazyPagingItems.peek(it)!!.id // our root list isn't nullable. when will this ever be null??
+                    lazyPagingItems.peek(it)!!.id
                 }
             )
         }
@@ -88,6 +90,7 @@ fun Search(
                 onClick = { onItemSelected(result.id) }
             )
         }
+        // TODO: this doesn't seem to be working. the final page instead gets stuck loading forever
         if (lazyPagingItems.loadState.append.endOfPaginationReached) {
             item {
                 Row (
