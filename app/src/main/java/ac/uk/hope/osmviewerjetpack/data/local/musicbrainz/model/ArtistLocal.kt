@@ -3,10 +3,8 @@ package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import java.util.SortedMap
 
 
 data class ArtistWithRelationsLocal(

@@ -1,7 +1,5 @@
 package ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model
 
-import java.util.SortedMap
-
 // TODO: move description retrieval here
 data class Artist(
     val mbid: String,

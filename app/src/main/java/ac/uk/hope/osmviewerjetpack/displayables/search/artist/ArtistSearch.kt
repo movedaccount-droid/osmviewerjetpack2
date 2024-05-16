@@ -3,7 +3,6 @@ package ac.uk.hope.osmviewerjetpack.displayables.search.artist
 import ac.uk.hope.osmviewerjetpack.displayables.search.Search
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.flow.map
 
 // retrieves search results for a generic artist query
 

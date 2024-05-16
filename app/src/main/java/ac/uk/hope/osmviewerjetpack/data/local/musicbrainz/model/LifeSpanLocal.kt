@@ -1,8 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.LifeSpan
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 
 data class LifeSpanLocal(
     val begin: String?,

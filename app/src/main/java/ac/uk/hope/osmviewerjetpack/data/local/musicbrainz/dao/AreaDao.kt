@@ -1,7 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao
 
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
 import ac.uk.hope.osmviewerjetpack.data.local.util.currentCacheTimeout
 import androidx.room.Dao
 import androidx.room.Query

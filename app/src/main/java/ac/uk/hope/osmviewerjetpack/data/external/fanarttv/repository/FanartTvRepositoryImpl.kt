@@ -1,11 +1,14 @@
 package ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository
 
+import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.AlbumImages
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.ArtistImages
 import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.AlbumImagesDao
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao.ArtistImagesDao
+import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.AlbumImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.ArtistImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.FanartTvService
+import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.model.toLocal
 import ac.uk.hope.osmviewerjetpack.data.network.fanarttv.responses.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,9 +36,7 @@ class FanartTvRepositoryImpl(
     private val rateLimiter = RateLimiter(1000)
 
     // get local first, and if not exists get from api
-    override fun getArtistImages(
-        mbid: String,
-    ): Flow<ArtistImages> {
+    override fun getArtistImages(mbid: String): Flow<ArtistImages> {
         return artistImagesDao.observe(mbid)
             .mapNotNull { artistImages ->
                 if (artistImages == null) {
@@ -62,6 +63,35 @@ class FanartTvRepositoryImpl(
             } finally {
                 rateLimiter.endOperationAndLimit()
             }
+        }
+    }
+
+    override fun getAlbumImages(mbid: String): Flow<AlbumImages> {
+        return albumImagesDao.observe(mbid)
+            .mapNotNull { albumImages ->
+                if (albumImages == null) {
+                    getAlbumImagesFromNetwork(mbid)
+                }
+                albumImages
+            }
+    }
+
+    private suspend fun getAlbumImagesFromNetwork(mbid: String) {
+        withContext(dispatcher) {
+            rateLimiter.startOperation()
+            var albumImages: AlbumImagesLocal
+            try {
+                albumImages = service.getAlbumImages(mbid).toLocal()
+            } catch (e: HttpException) {
+                if (e.code() == 404) {
+                    albumImages = AlbumImagesLocal(mbid)
+                } else {
+                    throw e
+                }
+            } finally {
+                rateLimiter.endOperationAndLimit()
+            }
+            albumImagesDao.upsert(albumImages)
         }
     }
 }

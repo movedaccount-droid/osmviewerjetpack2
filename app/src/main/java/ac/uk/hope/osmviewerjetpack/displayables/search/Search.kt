@@ -53,7 +53,8 @@ fun Search(
         val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex
         // strange things happen when relaunching from the backstack, so do some extra checks
         if (firstVisibleId in 0..lastVisibleId
-            && lastVisibleId in 0..lazyPagingItems.itemCount) {
+            && lastVisibleId in 0..<lazyPagingItems.itemCount
+        ) {
             viewModel.updateVisibleIds(
                 (firstVisibleId..lastVisibleId).map {
                     lazyPagingItems.peek(it)!!.id

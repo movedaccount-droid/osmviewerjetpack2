@@ -1,11 +1,9 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Area
-import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
 @Entity(
     tableName = "areas"

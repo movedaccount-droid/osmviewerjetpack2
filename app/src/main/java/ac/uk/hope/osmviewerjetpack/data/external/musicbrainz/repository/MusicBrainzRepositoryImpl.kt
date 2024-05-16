@@ -11,11 +11,8 @@ import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
-import ac.uk.hope.osmviewerjetpack.util.TAG
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 
@@ -48,7 +45,7 @@ class MusicBrainzRepositoryImpl(
     private suspend fun getArtistFromNetwork(mbid: String) {
         withContext(dispatcher) {
             rateLimiter.startOperation()
-            val artist = service.getArtist(mbid).toLocal()
+            val artist = service.lookupArtist(mbid).toLocal()
             rateLimiter.endOperationAndLimit()
             upsertArtistWithRelations(artist)
         }

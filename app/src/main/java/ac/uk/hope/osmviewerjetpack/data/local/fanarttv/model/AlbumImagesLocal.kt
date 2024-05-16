@@ -1,10 +1,8 @@
 package ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model
 
 import android.net.Uri
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
 // we don't care about any fatv-domain data
 

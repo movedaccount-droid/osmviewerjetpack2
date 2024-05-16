@@ -1,8 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.scaffold
 
 import ac.uk.hope.osmviewerjetpack.displayables.bottomBarScreenDestinations
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.FloatingActionButton

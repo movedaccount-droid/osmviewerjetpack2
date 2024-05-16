@@ -1,11 +1,8 @@
 package ac.uk.hope.osmviewerjetpack.displayables.artist
 
-import ac.uk.hope.osmviewerjetpack.util.TAG
-import android.net.Uri
-import android.util.Log
+import ac.uk.hope.osmviewerjetpack.displayables.search.album.ReleaseGroupLookupByArtist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +35,10 @@ fun ArtistView(
                 beginArea = artist.beginArea?.name,
                 active = artist.activeText,
                 tags = artist.sortedTags.joinToString(", ")
+            )
+            ReleaseGroupLookupByArtist(
+                mbid = artist.mbid,
+                onAlbumSelected = {},
             )
         } ?: run {
             // TODO: loading icon in center of screen

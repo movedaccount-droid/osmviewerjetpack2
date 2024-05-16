@@ -4,7 +4,6 @@ import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.AlbumImages
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.AlbumImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.local.util.CACHE_TIMEOUT
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface AlbumImagesDao {
 
     @Query("SELECT * FROM albumImages WHERE mbid = :mbid")
-    fun observe(mbid: String): Flow<AlbumImages>
+    fun observe(mbid: String): Flow<AlbumImages?>
 
     @Upsert
     suspend fun upsert(albumImages: AlbumImagesLocal)

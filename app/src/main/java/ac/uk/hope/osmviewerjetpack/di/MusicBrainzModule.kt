@@ -6,6 +6,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.MusicBrainzDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.di.util.getBaseHttpClientBuilder
 import ac.uk.hope.osmviewerjetpack.di.util.getBaseRetrofitBuilder
@@ -55,6 +56,10 @@ class MusicBrainzModule {
     @Provides
     fun provideAreaDao(database: MusicBrainzDatabase): AreaDao
             = database.areaDao()
+
+    @Provides
+    fun provideReleaseGroupDao(database: MusicBrainzDatabase): ReleaseGroupDao
+            = database.releaseGroupDao()
 
     @Provides
     @Singleton

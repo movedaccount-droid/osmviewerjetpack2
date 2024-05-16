@@ -1,9 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.local.fanarttv.dao
 
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.ArtistImages
-import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.AlbumImagesLocal
 import ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model.ArtistImagesLocal
-import ac.uk.hope.osmviewerjetpack.data.local.util.CACHE_TIMEOUT
 import ac.uk.hope.osmviewerjetpack.data.local.util.currentCacheTimeout
 import androidx.room.Dao
 import androidx.room.Query

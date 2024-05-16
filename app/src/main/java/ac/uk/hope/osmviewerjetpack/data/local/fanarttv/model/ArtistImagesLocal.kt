@@ -2,10 +2,8 @@ package ac.uk.hope.osmviewerjetpack.data.local.fanarttv.model
 
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.ArtistImages
 import android.net.Uri
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
 @Entity(
     tableName = "artistImages"
