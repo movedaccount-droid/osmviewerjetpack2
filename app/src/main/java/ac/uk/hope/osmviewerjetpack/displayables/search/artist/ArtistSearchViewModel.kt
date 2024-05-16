@@ -15,13 +15,11 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = ArtistSearchViewModel.ArtistSearchViewModelFactory::class)
 class ArtistSearchViewModel
 @AssistedInject constructor(
     @Assisted private val query: String,
-    private val musicBrainzRepository: MusicBrainzRepository,
     private val fanartTvRepository: FanartTvRepository,
     private val pagingSourceFactory: MusicBrainzArtistSearchPagingSourceFactory
 ): ViewModel() {
@@ -40,11 +38,9 @@ class ArtistSearchViewModel
         }
     }
 
-    val searcher = ArtistSearchViewSearcher(
-        query,
-        musicBrainzRepository,
-        fanartTvRepository
-    )
+    val getItemIcon = { mbid: String ->
+        fanartTvRepository.getArtistImages(mbid).map { it.thumbnail }
+    }
 
     @AssistedFactory
     interface ArtistSearchViewModelFactory {

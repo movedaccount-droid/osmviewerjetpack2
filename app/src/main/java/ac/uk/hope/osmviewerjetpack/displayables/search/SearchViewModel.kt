@@ -1,8 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.search
 
-import ac.uk.hope.osmviewerjetpack.util.TAG
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
@@ -19,8 +17,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = SearchViewModel.SearchViewModelFactory::class)
 class SearchViewModel
 @AssistedInject constructor(
-    @Assisted private val searcher: SearchViewSearcher,
-    @Assisted private val resultFlow: Flow<PagingData<SearchResult>>
+    @Assisted private val getItemIcon: (id: String) -> Flow<Uri>
 ): ViewModel() {
 
     val listState = LazyListState()
@@ -50,7 +47,7 @@ class SearchViewModel
     // retrieve local/network image for single artist
     private fun makeIconRequest(id: String) {
         viewModelScope.launch {
-            searcher.getIcon(id)
+            getItemIcon(id)
                 .distinctUntilChanged()
                 .collect {
                     images[id] = it
@@ -72,8 +69,7 @@ class SearchViewModel
     @AssistedFactory
     interface SearchViewModelFactory {
         fun create(
-            searcher: SearchViewSearcher,
-            resultFlow: Flow<PagingData<SearchResult>>
+            getItemIcon: (id: String) -> Flow<Uri>
         ): SearchViewModel
     }
 }

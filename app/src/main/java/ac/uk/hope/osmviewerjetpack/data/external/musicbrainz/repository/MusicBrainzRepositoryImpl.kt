@@ -25,6 +25,7 @@ class MusicBrainzRepositoryImpl(
     private val artistDao: ArtistDao,
     private val areaDao: AreaDao,
     private val service: MusicBrainzService,
+    // private val rateLimiter: RateLimiter,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ): MusicBrainzRepository {
 

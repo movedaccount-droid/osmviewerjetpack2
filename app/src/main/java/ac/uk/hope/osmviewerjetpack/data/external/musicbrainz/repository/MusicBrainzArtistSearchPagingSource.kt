@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
+import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
@@ -18,6 +19,7 @@ import java.io.IOException
 class MusicBrainzArtistSearchPagingSource
 @AssistedInject constructor(
     private val service: MusicBrainzService,
+    // private val rateLimiter: RateLimiter,
     @Assisted private val query: String
 ): PagingSource<Int, Artist>() {
 
