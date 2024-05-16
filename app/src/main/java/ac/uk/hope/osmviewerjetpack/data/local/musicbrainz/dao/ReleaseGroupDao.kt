@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao
 
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupWithReleaseLocal
 import ac.uk.hope.osmviewerjetpack.data.local.util.currentCacheTimeout
 import androidx.room.Dao
 import androidx.room.Query
@@ -12,6 +13,12 @@ interface ReleaseGroupDao {
 
     @Query("SELECT * FROM releaseGroups WHERE mbid = :mbid AND cacheTimestamp > :timeout")
     fun observe(mbid: String, timeout: Long = currentCacheTimeout): Flow<ReleaseGroupLocal?>
+
+    @Query("SELECT * FROM releaseGroups WHERE mbid = :mbid AND cacheTimestamp > :timeout")
+    fun observeWithRelease(
+        mbid: String,
+        timeout: Long = currentCacheTimeout
+    ): Flow<ReleaseGroupWithReleaseLocal?>
 
     @Upsert
     suspend fun upsert(releaseGroup: ReleaseGroupLocal)

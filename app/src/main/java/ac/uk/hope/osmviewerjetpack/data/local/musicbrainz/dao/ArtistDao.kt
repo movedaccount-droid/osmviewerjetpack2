@@ -20,7 +20,7 @@ interface ArtistDao {
     @Upsert
     suspend fun upsertAll(artist: List<ArtistLocal>)
 
-    @Query("DELETE FROM artists WHERE cacheTimestamp < :timeout")
+    @Query("DELETE FROM artists WHERE cacheTimestamp < :timeout AND NOT followed")
     suspend fun prune(timeout: Long = currentCacheTimeout)
 
     @Query("DELETE FROM artists")

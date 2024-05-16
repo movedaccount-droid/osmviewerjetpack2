@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReleaseGroupsByArtistResponse (
+data class BrowseReleaseGroupsResponse (
     @SerializedName("release-group-offset")
     val releaseGroupOffset: Int,
     @SerializedName("release-group-count")
@@ -15,4 +15,4 @@ data class ReleaseGroupsByArtistResponse (
     val releaseGroups: List<ReleaseGroupNetwork>
 )
 
-fun ReleaseGroupsByArtistResponse.toLocal() = releaseGroups.toLocal()
+fun BrowseReleaseGroupsResponse.toLocal() = releaseGroups.toLocal()

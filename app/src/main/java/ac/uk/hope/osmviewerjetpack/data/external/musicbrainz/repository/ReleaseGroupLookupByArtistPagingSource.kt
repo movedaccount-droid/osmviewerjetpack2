@@ -5,7 +5,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
-import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.ReleaseGroupsByArtistResponse
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.BrowseReleaseGroupsResponse
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
@@ -42,7 +42,7 @@ class ReleaseGroupLookupByArtistPagingSource
         val loadSize = minOf(params.loadSize, 100)
         val offset = loadSize * nextPageNumber
 
-        val response: ReleaseGroupsByArtistResponse
+        val response: BrowseReleaseGroupsResponse
         try {
             rateLimiter.startOperation()
             response = service.browseReleaseGroupsByArtist(mbid, loadSize, offset)

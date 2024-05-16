@@ -6,6 +6,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.MusicBrainzDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.di.util.getBaseHttpClientBuilder
@@ -62,6 +63,10 @@ class MusicBrainzModule {
             = database.releaseGroupDao()
 
     @Provides
+    fun provideReleaseDao(database: MusicBrainzDatabase): ReleaseDao
+            = database.releaseDao()
+
+    @Provides
     @Singleton
     @MusicBrainzLimiter
     fun provideMusicBrainzLimiter(): RateLimiter
@@ -72,11 +77,14 @@ class MusicBrainzModule {
     fun provideMusicBrainzRepository(
         artistDao: ArtistDao,
         areaDao: AreaDao,
+        releaseGroupDao: ReleaseGroupDao,
+        releaseDao: ReleaseDao,
         service: MusicBrainzService,
         @MusicBrainzLimiter rateLimiter: RateLimiter,
         @DefaultDispatcher dispatcher: CoroutineDispatcher,
     ): MusicBrainzRepository {
-        return MusicBrainzRepositoryImpl(artistDao, areaDao, service, rateLimiter, dispatcher)
+        return MusicBrainzRepositoryImpl(artistDao, areaDao, releaseGroupDao, releaseDao,
+            service, rateLimiter, dispatcher)
     }
 
 }

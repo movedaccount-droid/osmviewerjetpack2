@@ -1,5 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.artist
 
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
 import ac.uk.hope.osmviewerjetpack.displayables.search.album.ReleaseGroupLookupByArtist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,37 +14,39 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun ArtistView(
     mbid: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onReleaseSelected: (String) -> Unit = {},
 ) {
 
-    val viewModel: ArtistViewViewModel = hiltViewModel()
-
-    LaunchedEffect(Unit) {
-        viewModel.getArtist(mbid)
+    val viewModel = hiltViewModel<ArtistViewViewModel,
+            ArtistViewViewModel.ArtistViewViewModelFactory> { factory ->
+        factory.create(mbid)
     }
 
     Column (
         modifier.padding(8.dp)
     ) {
         viewModel.artist.value?.also { artist ->
-            // TODO: lazy scrollable row of image cards
+            val table = mutableMapOf(
+                "Tagged" to artist.sortedTags.joinToString(", ")
+            )
+            artist.activeText?.let { table["Active"] = it }
+            artist.area?.name?.let { table["Area"] = it }
+            artist.beginArea?.name?.let { table["Began"] = it }
             ReleaseGroupLookupByArtist(
                 mbid = artist.mbid,
-                onAlbumSelected = {},
+                onReleaseSelected = onReleaseSelected,
                 header = {
-                    ArtistViewDetail(
+                    InfoCard(
                         icon = viewModel.artistImages.value?.thumbnail,
                         name = artist.name,
                         desc = artist.shortDesc ?: "Artist",
-                        area = artist.area?.name,
-                        beginArea = artist.beginArea?.name,
-                        active = artist.activeText,
-                        tags = artist.sortedTags.joinToString(", ")
+                        table = table
                     )
                 }
             )
         } ?: run {
-            // TODO: loading icon in center of screen
+            // TODO: loading icon replacement card
             Text(text = "nothing...")
         }
     }

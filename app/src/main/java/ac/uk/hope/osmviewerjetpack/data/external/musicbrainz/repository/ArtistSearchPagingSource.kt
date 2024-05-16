@@ -7,7 +7,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
-import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.ArtistSearchResponse
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.SearchArtistsResponse
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
@@ -50,7 +50,7 @@ class ArtistSearchPagingSource
 
         // TODO: this try-catch is taken straight from the codelab. we should check this and
         // make sure we cover everything we need [and don't cover anything we don't]
-        val response: ArtistSearchResponse
+        val response: SearchArtistsResponse
         try {
             rateLimiter.startOperation()
             response = service.searchArtists(query, loadSize, offset)

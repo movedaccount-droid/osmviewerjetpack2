@@ -16,7 +16,7 @@ data class AreaNetwork(
     @SerializedName("sort-name")
     val sortName: String,
     @SerializedName("life-span")
-    val lifeSpan: LifeSpanNetwork
+    val lifeSpan: LifeSpanNetwork?
 )
 
 fun AreaNetwork.toLocal() = AreaLocal(
@@ -24,7 +24,7 @@ fun AreaNetwork.toLocal() = AreaLocal(
     type = typeId?.let { TypeLocal(mbid = it, name = type!!) },
     name = name,
     sortName = sortName,
-    lifeSpan = lifeSpan.toLocal()
+    lifeSpan = lifeSpan?.toLocal()
 )
 
 fun List<AreaNetwork>.toLocal() = map(AreaNetwork::toLocal)

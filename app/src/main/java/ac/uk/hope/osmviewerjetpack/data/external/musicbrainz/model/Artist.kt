@@ -11,7 +11,8 @@ data class Artist(
     val beginArea: Area?,
     val disambiguation: String?,
     val lifeSpan: LifeSpan?,
-    val tags: Map<String, Int>
+    val tags: Map<String, Int>,
+    val followed: Boolean
 ) {
     val shortDesc
         get() = disambiguation

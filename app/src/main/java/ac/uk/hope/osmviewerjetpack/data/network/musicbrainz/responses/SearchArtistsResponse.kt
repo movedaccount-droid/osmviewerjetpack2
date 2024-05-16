@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 // model for the api response, which we will then pass to the repository mappers for parsing
 
 @Serializable
-data class ArtistSearchResponse (
+data class SearchArtistsResponse (
     val created: String,
     val count: Int,
     val offset: Int,
     val artists: List<ArtistNetwork>
 )
 
-fun ArtistSearchResponse.toLocal() = artists.toLocal()
+fun SearchArtistsResponse.toLocal() = artists.toLocal()

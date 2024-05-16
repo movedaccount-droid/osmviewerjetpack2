@@ -1,7 +1,5 @@
-package ac.uk.hope.osmviewerjetpack.displayables.artist
+package ac.uk.hope.osmviewerjetpack.displayables.pieces
 
-import ac.uk.hope.osmviewerjetpack.displayables.pieces.IconImage
-import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoLine
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
@@ -17,15 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ArtistViewDetail(
+fun InfoCard(
     icon: Uri?,
     name: String,
-    desc: String = "Artist",
-    area: String?,
-    beginArea: String?,
-    active: String?,
-    tags: String?,
+    desc: String,
+    table: Map<String, String>,
 ) {
+    // TODO: lazy scrollable row of image cards
+    // TODO: move table to expandable card
+    // TODO: optional button for subscription
+    // WE ARE HERE CREATEING THE RELEASE LOOKUIP USING THIS NEWLY SE
+    // PARATED CARD. AND THEN FOCUSIN  OG N THAT BUTTON AND SUBSCRIPTIONS
+    // AND THEN REGULARLY LERAING CACHES
+    // AND THEN TESTS AFTER THAT PROBABLY
     Surface {
         Column {
             Row (
@@ -50,26 +52,27 @@ fun ArtistViewDetail(
                     )
                 }
             }
-            area?.let{ InfoLine("Area", area) }
-            beginArea?.let{ InfoLine("Began", beginArea) }
-            active?.let{ InfoLine("Active", active) }
-            tags?.let{ InfoLine("Tagged", tags) }
+            table.map {
+                InfoLine(it.key, it.value)
+            }
         }
     }
 }
 
 @Preview
 @Composable
-private fun PreviewArtistViewDetail() {
+private fun PreviewInfoCard() {
     OSMViewerJetpackTheme {
-        ArtistViewDetail(
+        InfoCard(
             icon = Uri.parse("https://thefader-res.cloudinary.com/private_images/w_760,c_limit,f_auto,q_auto:best/IMG_0301_brrdcn/song-you-need-lustsickpuppy-reclaims-her-iconography.jpg"),
             name = "LustSickPuppy",
             desc = "Artist from Somewhere",
-            area = "Somewhere",
-            beginArea = "Somewhere Else",
-            active = "Yes (2023 - Present)",
-            tags = "digital hardcore, hardcore, drum and bass"
+            table = mapOf(
+                "Area" to "Somewhere",
+                "Began" to "Somewhere Else",
+                "Active" to "Yes (2023 - Present)",
+                "Tagged" to "digital hardcore, hardcore, drum and bass"
+            )
         )
     }
 }

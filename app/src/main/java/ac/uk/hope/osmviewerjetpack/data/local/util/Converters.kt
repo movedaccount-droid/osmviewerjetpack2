@@ -1,5 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.data.local.util
 
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.TrackLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.TypeLocal
 import android.net.Uri
 import androidx.room.TypeConverter
@@ -47,6 +48,18 @@ class Converters {
     @TypeConverter
     fun jsonToTypesList(value: String): List<TypeLocal> {
         val type = object : TypeToken<List<TypeLocal>>(){}.type
+        return Gson().fromJson(value, type)
+    }
+
+    // tracks list
+    @TypeConverter
+    fun tracksListToJson(value: List<TrackLocal>): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToTracksList(value: String): List<TrackLocal> {
+        val type = object : TypeToken<List<TrackLocal>>(){}.type
         return Gson().fromJson(value, type)
     }
 

@@ -3,8 +3,10 @@ package ac.uk.hope.osmviewerjetpack.displayables.scaffold
 import ac.uk.hope.osmviewerjetpack.displayables.ArtistSearch
 import ac.uk.hope.osmviewerjetpack.displayables.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.Home
+import ac.uk.hope.osmviewerjetpack.displayables.ReleaseView
 import ac.uk.hope.osmviewerjetpack.displayables.artist.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.home.HomeScreen
+import ac.uk.hope.osmviewerjetpack.displayables.release.ReleaseView
 import ac.uk.hope.osmviewerjetpack.displayables.search.artist.ArtistSearch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,7 +35,6 @@ fun MBVNavHost(
         ) { navBackStackEntry ->
             // this should never be null, so if it is i want to know why
             val query = navBackStackEntry.arguments?.getString(ArtistSearch.queryArg)!!
-            // TODO: eventually pass navcontroller down for searching
             ArtistSearch(
                 query = query,
                 onArtistSelected = { mbid ->
@@ -47,7 +48,20 @@ fun MBVNavHost(
             deepLinks = ArtistView.deepLinks
         ) { navBackStackEntry ->
             val mbid = navBackStackEntry.arguments?.getString(ArtistView.mbidArg)
-            ArtistView(mbid!!) // this should never be null, so if it is i want to know why
+            ArtistView(
+                mbid = mbid!!, // this should never be null, so if it is i want to know why
+                onReleaseSelected = { releaseGroupMbid ->
+                    navController.navigateToRelease(releaseGroupMbid)
+                }
+            )
+        }
+        composable(
+            route = ReleaseView.routeWithArgs,
+            arguments = ReleaseView.arguments,
+            deepLinks = ReleaseView.deepLinks
+        ) { navBackStackEntry ->
+            val releaseGroupMbid = navBackStackEntry.arguments?.getString(ReleaseView.mbidArg)
+            ReleaseView(releaseGroupMbid!!)
         }
     }
 }
@@ -73,4 +87,8 @@ fun NavHostController.navigateToSearch(query: String) {
 
 fun NavHostController.navigateToArtist(mbid: String) {
     this.navigate("${ArtistView.route}/$mbid")
+}
+
+fun NavHostController.navigateToRelease(releaseGroupMbid: String) {
+    this.navigate("${ReleaseView.route}/$releaseGroupMbid")
 }

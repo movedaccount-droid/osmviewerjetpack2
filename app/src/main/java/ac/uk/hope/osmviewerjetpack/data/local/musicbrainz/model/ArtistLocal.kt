@@ -40,6 +40,10 @@ data class ArtistLocal(
     val areaMbid: String?,
     val beginAreaMbid: String?,
 
+    // follower system
+    val followed: Boolean = false,
+
+    // details
     val name: String,
     val sortName: String,
     val country: String?,
@@ -58,7 +62,8 @@ fun ArtistWithRelationsLocal.toExternal() = Artist(
     beginArea = beginArea?.toExternal(),
     disambiguation = artist.disambiguation,
     lifeSpan = artist.lifeSpan?.toExternal(),
-    tags = artist.tags
+    tags = artist.tags,
+    followed = artist.followed
 )
 
 fun List<ArtistWithRelationsLocal>.toExternal() = map(ArtistWithRelationsLocal::toExternal)

@@ -7,13 +7,17 @@ import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBra
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = ArtistViewViewModel.ArtistViewViewModelFactory::class)
 class ArtistViewViewModel
-@Inject constructor(
+@AssistedInject constructor(
+    @Assisted private val mbid: String,
     private val musicBrainzRepository: MusicBrainzRepository,
     private val fanartTvRepository: FanartTvRepository
 ): ViewModel() {
@@ -21,16 +25,12 @@ class ArtistViewViewModel
     val artist = mutableStateOf<Artist?>(null)
     val artistImages = mutableStateOf<ArtistImages?>(null)
 
-    fun getArtist(mbid: String) {
-        getArtistImages(mbid)
+    init {
         viewModelScope.launch {
             musicBrainzRepository.getArtist(mbid).collect {
                 artist.value = it
             }
         }
-    }
-
-    private fun getArtistImages(mbid: String) {
         viewModelScope.launch{
             fanartTvRepository.getArtistImages(mbid).collect {
                 artistImages.value = it
@@ -38,4 +38,8 @@ class ArtistViewViewModel
         }
     }
 
+    @AssistedFactory
+    interface ArtistViewViewModelFactory {
+        fun create(mbid: String): ArtistViewViewModel
+    }
 }
