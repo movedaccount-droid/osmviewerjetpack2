@@ -30,31 +30,6 @@ class MusicBrainzRepositoryImpl(
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ): MusicBrainzRepository {
 
-    // search for artists by name
-    override fun searchArtistsName(
-        query: String,
-        limit: Int,
-        offset: Int
-    ): Flow<List<Artist>> {
-        // we always have to make an external search to retrieve the scores. though we could cache
-        // searches too... still, no current need for offline-first approach
-        // TODO: is this actually starting a coroutine, or is this blocking?
-        Log.d(TAG, "entered blocking coroutine flow")
-        val f =  flow {
-            rateLimiter.startOperation()
-            val artists = service.searchArtists(
-                "artist:$query",
-                limit,
-                offset
-            ).artists.toLocal()
-            rateLimiter.endOperationAndLimit()
-            emit(artists.toExternal())
-            upsertArtistsWithRelations(artists)
-        }
-        Log.d(TAG, "exited blocking coroutine flow. how much time passed?")
-        return f
-    }
-
     // lookup artist by mbid
     override fun getArtist(mbid: String): Flow<Artist> {
         return artistDao.observe(mbid)
@@ -85,10 +60,4 @@ class MusicBrainzRepositoryImpl(
         artist.beginArea?.let { areaDao.upsert(it) }
     }
 
-    // runs less queries, therefore performing less ui refreshes
-    private suspend fun upsertArtistsWithRelations(artists: List<ArtistWithRelationsLocal>) {
-        artistDao.upsertAll(artists.map { it.artist })
-        areaDao.upsertAll(artists.mapNotNull { it.area })
-        areaDao.upsertAll(artists.mapNotNull { it.beginArea })
-    }
 }

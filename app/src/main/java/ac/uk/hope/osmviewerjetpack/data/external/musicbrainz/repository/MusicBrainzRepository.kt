@@ -8,11 +8,6 @@ import kotlinx.coroutines.flow.Flow
 // for testing. if we get the chance
 
 interface MusicBrainzRepository {
-    fun searchArtistsName(
-        query: String,
-        limit: Int = 10,
-        offset: Int = 0
-    ): Flow<List<Artist>>
 
     fun getArtist(mbid: String): Flow<Artist>
 
