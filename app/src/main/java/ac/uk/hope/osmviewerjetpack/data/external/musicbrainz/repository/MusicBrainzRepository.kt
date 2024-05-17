@@ -17,6 +17,10 @@ interface MusicBrainzRepository {
 
     fun isArtistFollowed(mbid: String): Flow<Boolean>
 
+    suspend fun followArtist(mbid: String)
+
+    suspend fun unfollowArtist(mbid: String)
+
     fun getReleaseWithReleaseGroup(releaseGroupMbid: String): Flow<Pair<ReleaseGroup, Release>>
 
 }

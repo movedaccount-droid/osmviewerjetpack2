@@ -44,6 +44,20 @@ class ArtistViewViewModel
         }
     }
 
+    fun toggleFollow() {
+        // set artistFollowed immediately for responsiveness
+        if (artistFollowed.value) {
+            viewModelScope.launch {
+                musicBrainzRepository.unfollowArtist(mbid)
+            }
+        } else {
+            viewModelScope.launch {
+                musicBrainzRepository.followArtist(mbid)
+            }
+        }
+        artistFollowed.value = !artistFollowed.value
+    }
+
     @AssistedFactory
     interface ArtistViewViewModelFactory {
         fun create(mbid: String): ArtistViewViewModel

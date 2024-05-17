@@ -10,7 +10,8 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowedDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupWithReleaseLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.FollowedLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.FollowedLocalFactory
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.toLocal
@@ -56,6 +57,21 @@ class MusicBrainzRepositoryImpl(
     override fun isArtistFollowed(mbid: String): Flow<Boolean> {
         return followedDao.getFollowed(mbid)
             .map { it != null }
+    }
+
+    override suspend fun followArtist(mbid: String) {
+        withContext(dispatcher) {
+            followedDao.addFollowed(FollowedLocalFactory.create(mbid))
+            // make sure we have the artist cached
+            getArtist(mbid)
+            // TODO: cache all artist release groups
+        }
+    }
+
+    override suspend fun unfollowArtist(mbid: String) {
+        withContext(dispatcher) {
+            followedDao.removeFollowed(mbid)
+        }
     }
 
     private suspend fun getArtistFromNetwork(mbid: String) {

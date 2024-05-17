@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.Calendar
 
 class Converters {
 
@@ -60,6 +61,31 @@ class Converters {
     @TypeConverter
     fun jsonToTracksList(value: String): List<TrackLocal> {
         val type = object : TypeToken<List<TrackLocal>>(){}.type
+        return Gson().fromJson(value, type)
+    }
+
+    // calendar
+    @TypeConverter
+    fun calendarToLong(value: Calendar): Long {
+        return value.timeInMillis
+    }
+
+    @TypeConverter
+    fun longToCalendar(value: Long): Calendar {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = value
+        return cal
+    }
+
+    // newReleases, list of mbids
+    @TypeConverter
+    fun stringListToJson(value: List<String>): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToStringList(value: String): List<String> {
+        val type = object : TypeToken<List<String>>(){}.type
         return Gson().fromJson(value, type)
     }
 

@@ -2,16 +2,22 @@ package ac.uk.hope.osmviewerjetpack.displayables.pieces
 
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -35,8 +42,7 @@ fun InfoCard(
     table: Map<String, String> = mapOf(),
     imageList: List<Uri> = listOf(),
     imageWidth: Dp = 120.dp,
-    buttonContent: (@Composable RowScope.() -> Unit)? = null,
-    onButtonClick: () -> Unit = {},
+    buttonContent: (@Composable RowScope.() -> Unit)? = null
 ) {
     // TODO: lazy scrollable row of image cards
     // TODO: optional button for subscription
@@ -94,10 +100,10 @@ fun InfoCard(
                     }
                 }
                 buttonContent?.let {
-                    ElevatedButton(
-                        onClick = onButtonClick,
+                    Row (
+                        horizontalArrangement = Arrangement.End,
                         modifier = Modifier
-                            .align(Alignment.End)
+                            .fillMaxWidth()
                             .padding(8.dp)
                     ) {
                         it(this)
@@ -132,7 +138,17 @@ private fun PreviewInfoCard() {
             imageList = listOf(uri, uri, uri, uri),
             expanded = expanded.value,
             onClick = { expanded.value = !expanded.value },
-            buttonContent = { Text("Follow") },
+            buttonContent = {
+                ElevatedButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "some",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -162,7 +178,17 @@ private fun PreviewInfoCardExpanded() {
             imageList = listOf(uri, uri, uri, uri),
             expanded = expanded.value,
             onClick = { expanded.value = !expanded.value },
-            buttonContent = { Text("Follow") },
+            buttonContent = {
+                ElevatedButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "some",
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }
