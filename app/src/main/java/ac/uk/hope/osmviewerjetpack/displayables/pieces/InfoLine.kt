@@ -25,28 +25,26 @@ fun InfoLine(
     text: String,
     modifier: Modifier = Modifier
 ) {
-    Surface (
+    Column (
         modifier
     ) {
-        Column {
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .alignByBaseline()
-                )
-                Text (
-                    text = text,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.alignByBaseline()
-                )
-            }
-            HorizontalDivider()
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .alignByBaseline()
+            )
+            Text (
+                text = text,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.alignByBaseline()
+            )
         }
+        HorizontalDivider()
     }
 }
 

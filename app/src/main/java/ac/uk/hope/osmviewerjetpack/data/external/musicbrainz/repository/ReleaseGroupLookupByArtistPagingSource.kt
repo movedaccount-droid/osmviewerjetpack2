@@ -65,7 +65,7 @@ class ReleaseGroupLookupByArtistPagingSource
         return LoadResult.Page(
             data = releaseGroups,
             prevKey = null,
-            nextKey = if (offset + releaseGroups.size + 1 == response.releaseGroupCount) {
+            nextKey = if (offset + releaseGroups.size == response.releaseGroupCount) {
                 null
             } else {
                 nextPageNumber + 1

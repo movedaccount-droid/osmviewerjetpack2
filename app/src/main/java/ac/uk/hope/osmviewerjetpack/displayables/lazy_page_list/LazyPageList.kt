@@ -49,7 +49,7 @@ fun LazyPageList(
     val getVisibleIds = { startIndex: Int, endIndex: Int ->
         // strange things happen when relaunching from the backstack, so do some extra checks
         if (startIndex in 0..endIndex
-            && startIndex in 0..<lazyPagingItems.itemCount
+            && endIndex in 0..<lazyPagingItems.itemCount
         ) {
             (startIndex..endIndex).map {
                 lazyPagingItems.peek(it)!!.id
@@ -91,7 +91,6 @@ fun LazyPageList(
                 onClick = { onItemSelected(result.id) }
             )
         }
-        // TODO: this doesn't seem to be working. the final page instead gets stuck loading forever
         if (lazyPagingItems.loadState.append.endOfPaginationReached) {
             item {
                 Row (

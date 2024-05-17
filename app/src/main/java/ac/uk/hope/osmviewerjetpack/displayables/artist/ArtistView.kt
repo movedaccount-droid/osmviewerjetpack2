@@ -3,9 +3,12 @@ package ac.uk.hope.osmviewerjetpack.displayables.artist
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
 import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.album.ReleaseGroupLookupByArtist
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,9 +25,11 @@ fun ArtistView(
         factory.create(mbid)
     }
 
-    Column (
-        modifier.padding(8.dp)
-    ) {
+    val expanded = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    Column {
         viewModel.artist.value?.also { artist ->
             val table = mutableMapOf(
                 "Tagged" to artist.sortedTags.joinToString(", ")
@@ -40,7 +45,10 @@ fun ArtistView(
                         icon = viewModel.artistImages.value?.thumbnail,
                         name = artist.name,
                         desc = artist.shortDesc ?: "Artist",
-                        table = table
+                        table = table,
+                        expanded = expanded.value,
+                        onClick = { expanded.value = !expanded.value },
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
                     )
                 }
             )

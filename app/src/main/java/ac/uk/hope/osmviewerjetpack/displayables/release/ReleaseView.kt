@@ -3,12 +3,15 @@ package ac.uk.hope.osmviewerjetpack.displayables.release
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoLine
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,6 +25,10 @@ fun ReleaseView(
     val viewModel = hiltViewModel<ReleaseViewViewModel,
             ReleaseViewViewModel.ReleaseViewViewModelFactory> { factory ->
         factory.create(releaseGroupMbid)
+    }
+
+    val expanded = rememberSaveable {
+        mutableStateOf(false)
     }
 
     viewModel.release.value?.let {
@@ -49,6 +56,9 @@ fun ReleaseView(
                     name = it.first.name,
                     desc = it.first.shortDesc,
                     table = table,
+                    expanded = expanded.value,
+                    onClick = { expanded.value = !expanded.value },
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
                 )
             }
             item {

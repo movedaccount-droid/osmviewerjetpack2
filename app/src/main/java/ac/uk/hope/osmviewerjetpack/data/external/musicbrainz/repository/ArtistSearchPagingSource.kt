@@ -76,7 +76,7 @@ class ArtistSearchPagingSource
         return LoadResult.Page(
             data = artists,
             prevKey = null,
-            nextKey = if (offset + artists.size + 1 == response.count) null else nextPageNumber + 1
+            nextKey = if (offset + artists.size == response.count) null else nextPageNumber + 1
         )
     }
 
