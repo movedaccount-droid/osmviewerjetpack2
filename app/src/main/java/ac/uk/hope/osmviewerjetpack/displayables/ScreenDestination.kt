@@ -43,7 +43,7 @@ object ArtistSearch: ScreenDestination {
     })
 }
 
-object ArtistView: ScreenDestination {
+object Artist: ScreenDestination {
     override val icon = Icons.Default.Person
     override val iconDesc = R.string.artist_icon_desc
     override val route = "artist"
@@ -59,7 +59,7 @@ object ArtistView: ScreenDestination {
     })
 }
 
-object ReleaseView: ScreenDestination {
+object Release: ScreenDestination {
     override val icon = Icons.Default.Info
     override val iconDesc = R.string.album_icon_desc
     override val route = "release"
@@ -75,4 +75,10 @@ object ReleaseView: ScreenDestination {
     })
 }
 
-val bottomBarScreenDestinations = listOf(Home, ArtistSearch, ArtistView)
+object FollowedArtists: ScreenDestination {
+    override val icon = Icons.Default.Person
+    override val iconDesc = R.string.followed_artists_icon_desc
+    override val route = "followed"
+}
+
+val bottomBarScreenDestinations = listOf(Home, FollowedArtists)

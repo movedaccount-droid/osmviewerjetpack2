@@ -1,12 +1,11 @@
 package ac.uk.hope.osmviewerjetpack.displayables.artist
 
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
-import ac.uk.hope.osmviewerjetpack.displayables.search.album.ReleaseGroupLookupByArtist
+import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.album.ReleaseGroupLookupByArtist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel

@@ -19,7 +19,7 @@ data class ReleaseNetwork(
     val disambiguation: String,
     val date: String,
     val country: String,
-    val barcode: String,
+    val barcode: String?,
     val media: List<MediaNetwork>,
     val packaging: String?,
     @SerializedName("packaging-id")
@@ -37,7 +37,7 @@ fun ReleaseNetwork.toLocal(releaseGroupMbid: String) = ReleaseLocal(
     disambiguation = if (disambiguation == "") null else disambiguation,
     date = date,
     country = country,
-    barcode = barcode.toLongOrNull(),
+    barcode = barcode?.toLongOrNull(),
     media = media.toLocal()!!, // should always have a tracklisting
     packaging = packagingId?.let { PackagingLocal(packagingId, packaging!!) },
     status = StatusLocal(statusId, status)

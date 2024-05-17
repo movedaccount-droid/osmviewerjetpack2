@@ -6,6 +6,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.FollowedLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseLocal
 import ac.uk.hope.osmviewerjetpack.data.local.util.Converters
@@ -14,7 +15,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [AreaLocal::class, ArtistLocal::class, ReleaseGroupLocal::class, ReleaseLocal::class],
+    entities = [AreaLocal::class,
+        ArtistLocal::class,
+        ReleaseGroupLocal::class,
+        ReleaseLocal::class,
+        FollowedLocal::class],
     version = 1,
     exportSchema = false
 )

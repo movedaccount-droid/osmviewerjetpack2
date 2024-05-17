@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search.artist
+package ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.artist
 
-import ac.uk.hope.osmviewerjetpack.displayables.search.Search
+import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.LazyPageList
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -17,8 +17,8 @@ fun ArtistSearch(
         factory.create(query)
     }
 
-    Search(
-        resultFlow = viewModel.flow,
+    LazyPageList(
+        pageFlow = viewModel.flow,
         getItemIcon = viewModel.getItemIcon,
         onItemSelected = onArtistSelected
     )

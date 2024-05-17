@@ -17,6 +17,7 @@ import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 
@@ -42,6 +43,12 @@ class MusicBrainzRepositoryImpl(
                 }
                 artist?.toExternal()
             }
+    }
+
+    override fun getFollowedArtists(): Flow<List<Artist>> {
+        // followed artists remain in cache, so no need to check network
+        return artistDao.observeFollowed()
+            .map(List<ArtistWithRelationsLocal>::toExternal)
     }
 
     private suspend fun getArtistFromNetwork(mbid: String) {

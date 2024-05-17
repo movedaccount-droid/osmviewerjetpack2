@@ -25,7 +25,7 @@ fun ReleaseView(
     }
 
     viewModel.release.value?.let {
-        val table = mutableMapOf<String, String>(
+        val table = mutableMapOf(
             "Format" to it.second.format,
             "Country" to it.second.country,
             "Status" to it.second.status,

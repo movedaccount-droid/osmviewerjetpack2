@@ -1,6 +1,6 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search.album
+package ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.album
 
-import ac.uk.hope.osmviewerjetpack.displayables.search.Search
+import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.LazyPageList
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,8 +17,8 @@ fun ReleaseGroupLookupByArtist(
         factory.create(mbid)
     }
 
-    Search(
-        resultFlow = viewModel.flow,
+    LazyPageList(
+        pageFlow = viewModel.flow,
         getItemIcon = viewModel.getItemIcon,
         onItemSelected = onReleaseSelected,
         header = header

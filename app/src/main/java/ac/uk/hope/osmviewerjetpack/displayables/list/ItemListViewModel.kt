@@ -1,8 +1,9 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search
+package ac.uk.hope.osmviewerjetpack.displayables.list
 
 import android.net.Uri
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
@@ -11,11 +12,14 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = SearchViewModel.SearchViewModelFactory::class)
-class SearchViewModel
+@HiltViewModel(assistedFactory = ItemListViewModel.ItemListViewModelFactory::class)
+class ItemListViewModel
 @AssistedInject constructor(
+    @Assisted private val listOffset: Int,
+    @Assisted private val getVisibleIds: (firstIndex: Int, lastIndex: Int) -> List<String>,
     @Assisted private val getItemIcon: (id: String) -> Flow<Uri>
 ): ViewModel() {
 
@@ -25,12 +29,32 @@ class SearchViewModel
     val images = mutableStateMapOf<String, Uri?>()
     private var imageLoadingChainActive = false
 
+    // watch list for scrolling
+    init {
+        viewModelScope.launch {
+            snapshotFlow { listState.firstVisibleItemIndex }
+                .distinctUntilChanged()
+                .collect { updateVisibleIds() }
+        }
+
+        viewModelScope.launch {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastIndex }
+                .distinctUntilChanged()
+                .onEach { updateVisibleIds() }
+        }
+    }
+
     // we want to prioritize retrieving images that are currently on-screen from the network.
     // we start a chain, load an image, await the response and then load another.
     // there are probably better ways to do this that would allow loading all cached images
     // immediately. but i can't think of them without this getting Very Complicated.
-    fun updateVisibleIds(ids: List<String>) {
-        visibleIds = ids
+    fun updateVisibleIds() {
+        // since we're using a lazylist, items are unloaded as we scroll forward.
+        // .lastIndex refers to loaded items, not items in the list!
+        val firstIndex = listState.firstVisibleItemIndex - listOffset
+        val lastIndex =
+            firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex - listOffset
+        visibleIds = getVisibleIds(firstIndex, lastIndex)
         startIconLoadingChain()
     }
 
@@ -66,9 +90,11 @@ class SearchViewModel
     }
 
     @AssistedFactory
-    interface SearchViewModelFactory {
+    interface ItemListViewModelFactory {
         fun create(
+            listOffset: Int,
+            getVisibleIds: (firstIndex: Int, lastIndex: Int) -> List<String>,
             getItemIcon: (id: String) -> Flow<Uri>
-        ): SearchViewModel
+        ): ItemListViewModel
     }
 }

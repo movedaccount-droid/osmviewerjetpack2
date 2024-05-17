@@ -19,6 +19,11 @@ data class ArtistWithRelationsLocal(
         entityColumn = "mbid"
     )
     val beginArea: AreaLocal?,
+    @Relation(
+        parentColumn = "mbid",
+        entityColumn = "artistMbid"
+    )
+    val followed: FollowedLocal?
 )
 
 @Entity(
@@ -40,9 +45,6 @@ data class ArtistLocal(
     val areaMbid: String?,
     val beginAreaMbid: String?,
 
-    // follower system
-    val followed: Boolean = false,
-
     // details
     val name: String,
     val sortName: String,
@@ -63,7 +65,7 @@ fun ArtistWithRelationsLocal.toExternal() = Artist(
     disambiguation = artist.disambiguation,
     lifeSpan = artist.lifeSpan?.toExternal(),
     tags = artist.tags,
-    followed = artist.followed
+    followed = followed != null
 )
 
 fun List<ArtistWithRelationsLocal>.toExternal() = map(ArtistWithRelationsLocal::toExternal)

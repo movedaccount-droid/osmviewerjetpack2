@@ -1,13 +1,15 @@
 package ac.uk.hope.osmviewerjetpack.displayables.scaffold
 
 import ac.uk.hope.osmviewerjetpack.displayables.ArtistSearch
-import ac.uk.hope.osmviewerjetpack.displayables.ArtistView
+import ac.uk.hope.osmviewerjetpack.displayables.Artist
+import ac.uk.hope.osmviewerjetpack.displayables.FollowedArtists
 import ac.uk.hope.osmviewerjetpack.displayables.Home
-import ac.uk.hope.osmviewerjetpack.displayables.ReleaseView
+import ac.uk.hope.osmviewerjetpack.displayables.Release
 import ac.uk.hope.osmviewerjetpack.displayables.artist.ArtistView
 import ac.uk.hope.osmviewerjetpack.displayables.home.HomeScreen
 import ac.uk.hope.osmviewerjetpack.displayables.release.ReleaseView
-import ac.uk.hope.osmviewerjetpack.displayables.search.artist.ArtistSearch
+import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.artist.ArtistSearch
+import ac.uk.hope.osmviewerjetpack.displayables.list.followedArtist.FollowedArtistBrowse
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -43,11 +45,11 @@ fun MBVNavHost(
             )
         }
         composable(
-            route = ArtistView.routeWithArgs,
-            arguments = ArtistView.arguments,
-            deepLinks = ArtistView.deepLinks
+            route = Artist.routeWithArgs,
+            arguments = Artist.arguments,
+            deepLinks = Artist.deepLinks
         ) { navBackStackEntry ->
-            val mbid = navBackStackEntry.arguments?.getString(ArtistView.mbidArg)
+            val mbid = navBackStackEntry.arguments?.getString(Artist.mbidArg)
             ArtistView(
                 mbid = mbid!!, // this should never be null, so if it is i want to know why
                 onReleaseSelected = { releaseGroupMbid ->
@@ -56,12 +58,19 @@ fun MBVNavHost(
             )
         }
         composable(
-            route = ReleaseView.routeWithArgs,
-            arguments = ReleaseView.arguments,
-            deepLinks = ReleaseView.deepLinks
+            route = Release.routeWithArgs,
+            arguments = Release.arguments,
+            deepLinks = Release.deepLinks
         ) { navBackStackEntry ->
-            val releaseGroupMbid = navBackStackEntry.arguments?.getString(ReleaseView.mbidArg)
+            val releaseGroupMbid = navBackStackEntry.arguments?.getString(Release.mbidArg)
             ReleaseView(releaseGroupMbid!!)
+        }
+        composable(route = FollowedArtists.route) {
+            FollowedArtistBrowse(
+                onArtistSelected = { mbid ->
+                    navController.navigateToArtist(mbid)
+                }
+            )
         }
     }
 }
@@ -86,9 +95,9 @@ fun NavHostController.navigateToSearch(query: String) {
 }
 
 fun NavHostController.navigateToArtist(mbid: String) {
-    this.navigate("${ArtistView.route}/$mbid")
+    this.navigate("${Artist.route}/$mbid")
 }
 
 fun NavHostController.navigateToRelease(releaseGroupMbid: String) {
-    this.navigate("${ReleaseView.route}/$releaseGroupMbid")
+    this.navigate("${Release.route}/$releaseGroupMbid")
 }

@@ -13,6 +13,8 @@ interface MusicBrainzRepository {
 
     fun getArtist(mbid: String): Flow<Artist>
 
+    fun getFollowedArtists(): Flow<List<Artist>>
+
     fun getReleaseWithReleaseGroup(releaseGroupMbid: String): Flow<Pair<ReleaseGroup, Release>>
 
 }

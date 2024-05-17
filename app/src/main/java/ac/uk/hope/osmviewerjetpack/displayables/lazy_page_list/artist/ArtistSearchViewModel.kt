@@ -1,8 +1,8 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search.album
+package ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.artist
 
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
-import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.ReleaseGroupLookupByArtistPagingSourceFactory
-import ac.uk.hope.osmviewerjetpack.displayables.search.SearchResult
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.ArtistSearchPagingSourceFactory
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItemInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -15,22 +15,21 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 
-@HiltViewModel(assistedFactory =
-    ReleaseGroupLookupByArtistViewModel.ReleaseGroupLookupByArtistViewModelFactory::class)
-class ReleaseGroupLookupByArtistViewModel
+@HiltViewModel(assistedFactory = ArtistSearchViewModel.ArtistSearchViewModelFactory::class)
+class ArtistSearchViewModel
 @AssistedInject constructor(
-    @Assisted private val mbid: String,
+    @Assisted private val query: String,
     private val fanartTvRepository: FanartTvRepository,
-    private val pagingSourceFactory: ReleaseGroupLookupByArtistPagingSourceFactory
+    private val pagingSourceFactory: ArtistSearchPagingSourceFactory
 ): ViewModel() {
 
     val flow = Pager(
         PagingConfig(pageSize = 15)
     ) {
-        pagingSourceFactory.create(mbid)
+        pagingSourceFactory.create(query)
     }.flow.cachedIn(viewModelScope).map { pagingData ->
         pagingData.map {
-            SearchResult(
+            ListItemInfo(
                 id = it.mbid,
                 name = it.name,
                 desc = it.shortDesc
@@ -39,11 +38,11 @@ class ReleaseGroupLookupByArtistViewModel
     }
 
     val getItemIcon = { mbid: String ->
-        fanartTvRepository.getAlbumImages(mbid).map { it.thumbnail }
+        fanartTvRepository.getArtistImages(mbid).map { it.thumbnail }
     }
 
     @AssistedFactory
-    interface ReleaseGroupLookupByArtistViewModelFactory {
-        fun create(mbid: String): ReleaseGroupLookupByArtistViewModel
+    interface ArtistSearchViewModelFactory {
+        fun create(query: String): ArtistSearchViewModel
     }
 }

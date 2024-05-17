@@ -1,6 +1,5 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search
+package ac.uk.hope.osmviewerjetpack.displayables.pieces
 
-import ac.uk.hope.osmviewerjetpack.displayables.pieces.IconImage
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.net.Uri
 import androidx.compose.foundation.clickable
@@ -17,7 +16,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SearchResultListItem(
+fun ListItem(
     image: Uri?,
     headline: String,
     subhead: String?,
@@ -55,9 +54,9 @@ fun SearchResultListItem(
 
 @Preview
 @Composable
-private fun PreviewSearchResultListItem() {
+private fun PreviewListItem() {
     OSMViewerJetpackTheme {
-        SearchResultListItem(
+        ListItem(
             image = Uri.parse(
                 Uri.decode(
                     "https://assets.fanart.tv/fanart/music/a9100753-f539-43cf-bcc9-579566fb512e/artistthumb/simply-red-4fded0c91fe47.jpg"
@@ -71,9 +70,9 @@ private fun PreviewSearchResultListItem() {
 
 @Preview
 @Composable
-private fun PreviewSearchResultListItemNoDesc() {
+private fun PreviewListItemNoDesc() {
     OSMViewerJetpackTheme {
-        SearchResultListItem(
+        ListItem(
             image = Uri.parse(
                 Uri.decode(
                     "https://assets.fanart.tv/fanart/music/a9100753-f539-43cf-bcc9-579566fb512e/artistthumb/simply-red-4fded0c91fe47.jpg"

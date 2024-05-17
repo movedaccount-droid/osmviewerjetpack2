@@ -1,5 +1,8 @@
-package ac.uk.hope.osmviewerjetpack.displayables.search
+package ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list
 
+import ac.uk.hope.osmviewerjetpack.displayables.list.ItemListViewModel
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItem
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItemInfo
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
@@ -33,54 +37,35 @@ import kotlinx.coroutines.flow.onEach
 // a callback.
 
 @Composable
-fun Search(
-    resultFlow: Flow<PagingData<SearchResult>>,
+fun LazyPageList(
+    pageFlow: Flow<PagingData<ListItemInfo>>,
     getItemIcon: (id: String) -> Flow<Uri>,
     onItemSelected: (id: String) -> Unit = {},
     header: (@Composable ColumnScope.() -> Unit)? = null
 ) {
 
-    Column {
-
-    }
-
-    val viewModel =
-        hiltViewModel<SearchViewModel, SearchViewModel.SearchViewModelFactory> { factory ->
-        factory.create(getItemIcon)
-    }
-    val lazyPagingItems = resultFlow.collectAsLazyPagingItems()
-
     // check what is on-screen for image prioritization
-    // this is almost business logic, but we need to collectAsLazyPagingItems in a composable,
-    // so we can't put it in the viewmodel. blugh
-    fun recalculateVisibleIds() {
-        // since we're using a lazylist, items are unloaded as we scroll forward.
-        // .lastIndex refers to loaded items, not items in the list!
-        val offset = if (header == null) 0 else 1
-        val firstVisibleId = viewModel.listState.firstVisibleItemIndex - offset
-        val lastVisibleId = firstVisibleId + viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex - offset
+    val lazyPagingItems = pageFlow.collectAsLazyPagingItems()
+    val getVisibleIds = { startIndex: Int, endIndex: Int ->
         // strange things happen when relaunching from the backstack, so do some extra checks
-        if (firstVisibleId in 0..lastVisibleId
-            && lastVisibleId in 0..<lazyPagingItems.itemCount
+        if (startIndex in 0..endIndex
+            && startIndex in 0..<lazyPagingItems.itemCount
         ) {
-            viewModel.updateVisibleIds(
-                (firstVisibleId..lastVisibleId).map {
-                    lazyPagingItems.peek(it)!!.id
-                }
-            )
+            (startIndex..endIndex).map {
+                lazyPagingItems.peek(it)!!.id
+            }
+        } else {
+            listOf()
         }
     }
 
-    LaunchedEffect(viewModel.listState) {
-        snapshotFlow { viewModel.listState.firstVisibleItemIndex }
-            .distinctUntilChanged()
-            .collect { recalculateVisibleIds() }
-    }
-
-    LaunchedEffect(viewModel.listState) {
-        snapshotFlow { viewModel.listState.layoutInfo.visibleItemsInfo.lastIndex }
-            .distinctUntilChanged()
-            .onEach { recalculateVisibleIds() }
+    val viewModel =
+        hiltViewModel<ItemListViewModel, ItemListViewModel.ItemListViewModelFactory> { factory ->
+        factory.create(
+            listOffset = if (header == null) 0 else 1,
+            getVisibleIds = getVisibleIds,
+            getItemIcon = getItemIcon
+        )
     }
 
     // render list
@@ -99,7 +84,7 @@ fun Search(
             key = lazyPagingItems.itemKey { it.id }
         ) { index ->
             val result = lazyPagingItems[index]!!
-            SearchResultListItem(
+            ListItem(
                 image = viewModel.images[result.id],
                 headline = result.name,
                 subhead = result.desc,
@@ -137,7 +122,7 @@ fun Search(
                 }
             }
         } else {
-            recalculateVisibleIds()
+            viewModel.updateVisibleIds()
         }
     }
 }
