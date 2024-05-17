@@ -40,7 +40,7 @@ class ItemListViewModel
         viewModelScope.launch {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastIndex }
                 .distinctUntilChanged()
-                .onEach { updateVisibleIds() }
+                .collect { updateVisibleIds() }
         }
     }
 
@@ -51,9 +51,9 @@ class ItemListViewModel
     fun updateVisibleIds() {
         // since we're using a lazylist, items are unloaded as we scroll forward.
         // .lastIndex refers to loaded items, not items in the list!
-        val firstIndex = listState.firstVisibleItemIndex - listOffset
+        val firstIndex = maxOf(listState.firstVisibleItemIndex, listOffset)
         val lastIndex =
-            firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex - listOffset
+            maxOf(firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex, listOffset)
         visibleIds = getVisibleIds(firstIndex, lastIndex)
         startIconLoadingChain()
     }

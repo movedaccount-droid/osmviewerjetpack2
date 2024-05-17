@@ -2,6 +2,7 @@ package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz
 
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowedDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal
@@ -29,4 +30,6 @@ abstract class MusicBrainzDatabase: RoomDatabase() {
     abstract fun areaDao(): AreaDao
     abstract fun releaseGroupDao(): ReleaseGroupDao
     abstract fun releaseDao(): ReleaseDao
+
+    abstract fun followedDao(): FollowedDao
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
@@ -37,17 +38,17 @@ fun ImageCarousel(
     images: List<Uri>,
     description: String,
     modifier: Modifier = Modifier,
-    offset: Dp = 0.dp,
-    imageWidth: Dp = 120.dp
+    offset: Dp = 8.dp,
+    imageWidth: Dp = 100.dp
 ) {
     val pagerState = rememberPagerState(
         pageCount = { images.size },
     )
     HorizontalPager(
         state = pagerState,
-        pageSize = PageSize.Fixed(imageWidth),
+        pageSize = PageSize.Fixed(imageWidth + offset),
         beyondBoundsPageCount = 1,
-        contentPadding = PaddingValues(start = offset),
+        contentPadding = PaddingValues(start = offset, end = offset),
         flingBehavior = PagerDefaults.flingBehavior(
             state = pagerState,
             pagerSnapDistance = PagerSnapDistance.atMost(3)
@@ -58,10 +59,12 @@ fun ImageCarousel(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(images[page])
                 .build(),
+            // TODO: allow custom placeholder
             placeholder = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = description,
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .widthIn(0.dp, imageWidth)
                 .clip(RoundedCornerShape(12.dp)),
             onError = { err -> err.result.throwable.message?.let { it1 -> Log.d(TAG, it1) } }
         )

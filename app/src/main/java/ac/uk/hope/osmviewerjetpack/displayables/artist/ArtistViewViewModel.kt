@@ -24,6 +24,7 @@ class ArtistViewViewModel
 
     val artist = mutableStateOf<Artist?>(null)
     val artistImages = mutableStateOf<ArtistImages?>(null)
+    val artistFollowed = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
@@ -34,6 +35,11 @@ class ArtistViewViewModel
         viewModelScope.launch{
             fanartTvRepository.getArtistImages(mbid).collect {
                 artistImages.value = it
+            }
+        }
+        viewModelScope.launch{
+            musicBrainzRepository.isArtistFollowed(mbid).collect {
+                artistFollowed.value = it
             }
         }
     }

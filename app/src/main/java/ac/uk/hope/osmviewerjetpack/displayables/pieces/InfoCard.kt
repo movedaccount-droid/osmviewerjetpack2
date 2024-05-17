@@ -3,12 +3,15 @@ package ac.uk.hope.osmviewerjetpack.displayables.pieces
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,7 +35,7 @@ fun InfoCard(
     table: Map<String, String> = mapOf(),
     imageList: List<Uri> = listOf(),
     imageWidth: Dp = 120.dp,
-    buttonText: String? = null,
+    buttonContent: (@Composable RowScope.() -> Unit)? = null,
     onButtonClick: () -> Unit = {},
 ) {
     // TODO: lazy scrollable row of image cards
@@ -45,7 +48,9 @@ fun InfoCard(
             onClick = onClick,
             modifier = modifier
         ) {
-            Column {
+            Column (
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 if (imageList.isNotEmpty()) {
                     ImageCarousel(
                         images = imageList,
@@ -88,14 +93,14 @@ fun InfoCard(
                         }
                     }
                 }
-                buttonText?.let {
-                    Button(
+                buttonContent?.let {
+                    ElevatedButton(
                         onClick = onButtonClick,
                         modifier = Modifier
                             .align(Alignment.End)
                             .padding(8.dp)
                     ) {
-                        Text(text = it)
+                        it(this)
                     }
                 }
             }
@@ -127,7 +132,7 @@ private fun PreviewInfoCard() {
             imageList = listOf(uri, uri, uri, uri),
             expanded = expanded.value,
             onClick = { expanded.value = !expanded.value },
-            buttonText = "Follow",
+            buttonContent = { Text("Follow") },
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -157,7 +162,7 @@ private fun PreviewInfoCardExpanded() {
             imageList = listOf(uri, uri, uri, uri),
             expanded = expanded.value,
             onClick = { expanded.value = !expanded.value },
-            buttonText = "Follow",
+            buttonContent = { Text("Follow") },
             modifier = Modifier.fillMaxWidth()
         )
     }

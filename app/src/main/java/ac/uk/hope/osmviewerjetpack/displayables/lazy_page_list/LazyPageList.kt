@@ -105,7 +105,8 @@ fun LazyPageList(
                 }
             }
         }
-        if (lazyPagingItems.loadState.append == LoadState.Loading) {
+        if (lazyPagingItems.loadState.append == LoadState.Loading
+            || lazyPagingItems.loadState.refresh == LoadState.Loading) {
             item {
                 Row (
                     Modifier.fillMaxWidth(),
@@ -120,8 +121,6 @@ fun LazyPageList(
                     )
                 }
             }
-        } else {
-            viewModel.updateVisibleIds()
         }
     }
 }

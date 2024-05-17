@@ -6,6 +6,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
 import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowedDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
@@ -29,6 +30,7 @@ class MusicBrainzRepositoryImpl(
     private val areaDao: AreaDao,
     private val releaseGroupDao: ReleaseGroupDao,
     private val releaseDao: ReleaseDao,
+    private val followedDao: FollowedDao,
     private val service: MusicBrainzService,
     @MusicBrainzLimiter private val rateLimiter: RateLimiter,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
@@ -49,6 +51,11 @@ class MusicBrainzRepositoryImpl(
         // followed artists remain in cache, so no need to check network
         return artistDao.observeFollowed()
             .map(List<ArtistWithRelationsLocal>::toExternal)
+    }
+
+    override fun isArtistFollowed(mbid: String): Flow<Boolean> {
+        return followedDao.getFollowed(mbid)
+            .map { it != null }
     }
 
     private suspend fun getArtistFromNetwork(mbid: String) {
