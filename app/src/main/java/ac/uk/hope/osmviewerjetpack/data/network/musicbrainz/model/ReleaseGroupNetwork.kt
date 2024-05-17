@@ -20,11 +20,14 @@ data class ReleaseGroupNetwork(
     // TODO: we will need to parse this to a datetime at some point for display sorting
     @SerializedName("first-release-date")
     val firstReleaseDate: String,
+    @SerializedName("artist-credit")
+    val artistCredit: List<ArtistCreditNetwork>,
     val disambiguation: String,
 )
 
 fun ReleaseGroupNetwork.toLocal() = ReleaseGroupLocal(
     mbid = id,
+    artistMbids = artistCredit.toLocal().map { it.artist.mbid },
     types = primaryTypeId?.let { primaryTypeId ->
         listOf(
             TypeLocal(

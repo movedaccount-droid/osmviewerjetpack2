@@ -21,7 +21,7 @@ data class ArtistNetwork(
     val beginArea: AreaNetwork?,
     val disambiguation: String?,
     @SerializedName("life-span")
-    val lifeSpan: LifeSpanNetwork,
+    val lifeSpan: LifeSpanNetwork?,
     val tags: List<TagNetwork>?,
 )
 
@@ -33,7 +33,7 @@ fun ArtistNetwork.toLocal() = ArtistWithRelationsLocal(
         sortName = sortName,
         country = country,
         disambiguation = disambiguation,
-        lifeSpan = lifeSpan.toLocal(),
+        lifeSpan = lifeSpan?.toLocal(),
         tags = tags?.toLocal() ?: mapOf(),
         areaMbid = area?.id,
         beginAreaMbid = beginArea?.id

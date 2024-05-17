@@ -93,7 +93,7 @@ class MusicBrainzRepositoryImpl(
     override fun getReleaseWithReleaseGroup(
         releaseGroupMbid: String
     ): Flow<Pair<ReleaseGroup, Release>> {
-        return releaseGroupDao.observeWithRelease(releaseGroupMbid)
+        return releaseGroupDao.observeWithRelationships(releaseGroupMbid)
             .mapNotNull{ releasePair ->
                 if (releasePair == null) {
                     getReleaseGroupFromNetwork(releaseGroupMbid)

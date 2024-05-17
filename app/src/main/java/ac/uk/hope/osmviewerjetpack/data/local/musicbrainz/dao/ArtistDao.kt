@@ -29,7 +29,7 @@ interface ArtistDao {
     @Query("DELETE FROM artists " +
             "WHERE ROWID IN (" +
                 "SELECT a.ROWID FROM artists a " +
-                "INNER JOIN followed f ON f.artistMbid = a.mbid " +
+            "INNER JOIN followed f ON f.artistMbid = a.mbid " +
                 "WHERE f.artistMbid IS NULL AND a.cacheTimestamp < :timeout" +
             ")")
     suspend fun prune(timeout: Long = currentCacheTimeout)

@@ -31,7 +31,9 @@ interface MusicBrainzService {
     suspend fun browseReleaseGroupsByArtist(
         @Query("artist") mbid: String,
         @Query("limit") limit: Int,
-        @Query("offset") offset: Int
+        @Query("offset") offset: Int,
+        @Query("inc") inc: String = "artist-credits",
+        @Query("release-groups-status") showType: String = "website-default"
     ): BrowseReleaseGroupsResponse
 
     @GET("release")

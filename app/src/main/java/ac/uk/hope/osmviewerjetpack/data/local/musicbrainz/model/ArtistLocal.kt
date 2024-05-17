@@ -38,9 +38,6 @@ data class ArtistLocal(
     // so we keep it embedded, unless we ever need this
     @Embedded val type: TypeLocal?,
 
-    // lifespan on the other hand has no mbid, so it's always embedded
-    @Embedded val lifeSpan: LifeSpanLocal?,
-
     // foreign key lookups
     val areaMbid: String?,
     val beginAreaMbid: String?,
@@ -50,6 +47,7 @@ data class ArtistLocal(
     val sortName: String,
     val country: String?,
     val disambiguation: String?,
+    @Embedded val lifeSpan: LifeSpanLocal?,
     val tags: Map<String, Int>,
     val cacheTimestamp: Long = System.currentTimeMillis()
 )

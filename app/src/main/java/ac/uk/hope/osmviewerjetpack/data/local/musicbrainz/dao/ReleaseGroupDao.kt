@@ -15,7 +15,7 @@ interface ReleaseGroupDao {
     fun observe(mbid: String, timeout: Long = currentCacheTimeout): Flow<ReleaseGroupLocal?>
 
     @Query("SELECT * FROM releaseGroups WHERE mbid = :mbid AND cacheTimestamp > :timeout")
-    fun observeWithRelease(
+    fun observeWithRelationships(
         mbid: String,
         timeout: Long = currentCacheTimeout
     ): Flow<ReleaseGroupWithReleaseLocal?>

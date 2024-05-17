@@ -35,7 +35,7 @@ fun ReleaseView(
         val table = mutableMapOf(
             "Format" to it.second.format,
             "Country" to it.second.country,
-            "Status" to it.second.status,
+            "Status" to it.second.status
         )
         it.second.barcode?.let { barcode ->
             table["Barcode"] = barcode.toString()
