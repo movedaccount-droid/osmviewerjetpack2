@@ -11,4 +11,7 @@
     <string name="unfollow_artist_desc">Unfollow artist</string>
     <string name="follow_channel_name">New Releases</string>
     <string name="follow_channel_description">New releases from followed artists</string>
+    <string name="cross_desc">Cross</string>
+    <string name="caught_up">Caught up</string>
+    <string name="no_new_releases_since_last_visit">No new releases since last visit.\nFollow artists to be alerted to new music as it arrives.</string>
 </resources>

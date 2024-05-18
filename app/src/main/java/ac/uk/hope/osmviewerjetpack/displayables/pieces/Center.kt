@@ -3,6 +3,7 @@ package ac.uk.hope.osmviewerjetpack.displayables.pieces
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -18,7 +19,7 @@ fun Center(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
     ) {
         content(this)
     }

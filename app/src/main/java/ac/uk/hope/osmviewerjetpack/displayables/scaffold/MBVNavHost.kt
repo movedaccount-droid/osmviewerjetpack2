@@ -6,10 +6,10 @@ import ac.uk.hope.osmviewerjetpack.displayables.FollowedArtists
 import ac.uk.hope.osmviewerjetpack.displayables.Home
 import ac.uk.hope.osmviewerjetpack.displayables.Release
 import ac.uk.hope.osmviewerjetpack.displayables.artist.ArtistView
-import ac.uk.hope.osmviewerjetpack.displayables.home.HomeScreen
 import ac.uk.hope.osmviewerjetpack.displayables.release.ReleaseView
 import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.artist.ArtistSearch
 import ac.uk.hope.osmviewerjetpack.displayables.list.followedArtist.FollowedArtistBrowse
+import ac.uk.hope.osmviewerjetpack.displayables.list.notifications.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -28,7 +28,7 @@ fun MBVNavHost(
     ) {
         composable(route = Home.route) {
             // TODO: eventually pass navcontroller down for item selection
-            HomeScreen()
+            Notifications {}
         }
         composable(
             route = ArtistSearch.routeWithArgs,

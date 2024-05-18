@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
+import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.DetailedNotification
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Release
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
 import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
@@ -10,9 +11,11 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.NotificationDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistWithRelationsLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.FollowedLocalFactory
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.NotificationLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.toExternal
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.ReleaseGroupNetwork
@@ -26,9 +29,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -37,7 +40,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.concurrent.atomic.AtomicBoolean
 
 // repositories officially "own" our mapper functions and take the network/services
 // to pass through them, responding with our final model
@@ -68,7 +70,7 @@ class MusicBrainzRepositoryImpl(
     }
 
     override fun getArtists(mbids: List<String>): Flow<List<Artist>> {
-        val hasRunNetworkRequests = AtomicBoolean(false)
+        var hasRunNetworkRequests = false
         return artistDao.observeAll(mbids)
             .distinctUntilChanged()
             .map {
@@ -76,12 +78,13 @@ class MusicBrainzRepositoryImpl(
                 // only retrieve uncached artists once from network
                 // TODO: obviously this fails if we hit a network error - we should throw an
                 // exception to handle that in getArtistFromNetwork()
-                if (!hasRunNetworkRequests.get()) {
+                if (!hasRunNetworkRequests) {
                     mbids.filter { mbid ->
                         !retrievedMbids.contains(mbid)
                     }.map { mbid ->
                         getArtistFromNetwork(mbid)
                     }
+                    hasRunNetworkRequests = true
                 }
                 it.fastFilterNotNull().toExternal()
             }
@@ -206,6 +209,29 @@ class MusicBrainzRepositoryImpl(
                             releasePair.value!!.toExternal()
                         )
                     }
+                }
+            }
+    }
+
+    override fun getDetailedNotifications(): Flow<List<DetailedNotification>> {
+        var hasRunNetworkRequests = false
+        return notificationDao.observeAllWithDetailedReleaseGroups()
+            .map { it.toExternal() }
+            .onEach { list ->
+                if (!hasRunNetworkRequests) {
+                    list.map { notification ->
+                        // pretty sure i'm rewriting logic here.
+                        // i think you need to know more about sql efficiency to use room than i do,
+                        // because i keep sacrificing code abstraction for maybe-performance
+                        // benefits that probably aren't much faster anyway
+                        val retrievedMbids = notification.artists.map { it.mbid }
+                        val unretrievedMbids =
+                            notification.releaseGroup.artistMbids.filter {
+                                !retrievedMbids.contains(it)
+                            }
+                        unretrievedMbids.forEach { getArtistFromNetwork(it) }
+                    }
+                    hasRunNetworkRequests = true
                 }
             }
     }

@@ -10,6 +10,7 @@ import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.AreaLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ArtistLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.FollowLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.NotificationLocal
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupArtistCrossRef
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseLocal
 import ac.uk.hope.osmviewerjetpack.data.local.util.Converters
@@ -21,6 +22,7 @@ import androidx.room.TypeConverters
     entities = [AreaLocal::class,
         ArtistLocal::class,
         ReleaseGroupLocal::class,
+        ReleaseGroupArtistCrossRef::class,
         ReleaseLocal::class,
         FollowLocal::class,
         NotificationLocal::class],

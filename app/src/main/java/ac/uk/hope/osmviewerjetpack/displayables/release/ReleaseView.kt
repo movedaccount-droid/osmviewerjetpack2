@@ -1,5 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.displayables.release
 
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.Center
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoLine
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,9 +52,6 @@ fun ReleaseView(
         if (it.first.types.firstOrNull() != null) {
             table["Type"] = it.first.types.joinToString(", ")
         }
-        Button(onClick = { viewModel.addNotification(releaseGroupMbid) }) {
-            Text(text = "DEBUG: ADD NOTIFICATION")
-        }
         LazyColumn {
             item {
                 InfoCard(
@@ -81,7 +80,12 @@ fun ReleaseView(
                 )
             }
         }
+        Button(onClick = { viewModel.addNotification(releaseGroupMbid) }) {
+            Text(text = "DEBUG: ADD NOTIFICATION")
+        }
     } ?: run {
-        // TODO: loading
+        Center {
+            CircularProgressIndicator()
+        }
     }
 }

@@ -4,6 +4,7 @@ import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
@@ -39,3 +40,25 @@ fun ReleaseGroupLocal.toExternal() = ReleaseGroup(
 
 @JvmName("toExternal")
 fun List<ReleaseGroupLocal>.toExternal() = map(ReleaseGroupLocal::toExternal)
+
+// RELATIONSHIPS -------------
+
+@Entity(primaryKeys = ["releaseGroupMbid", "artistMbid"])
+data class ReleaseGroupArtistCrossRef(
+    val releaseGroupMbid: String,
+    val artistMbid: String
+)
+
+data class ReleaseGroupWithArtists(
+    @Embedded val releaseGroup: ReleaseGroupLocal,
+    @Relation(
+        parentColumn = "mbid",
+        entityColumn = "mbid",
+        associateBy = Junction(
+            ReleaseGroupArtistCrossRef::class,
+            parentColumn = "releaseGroupMbid",
+            entityColumn = "artistMbid"
+        )
+    )
+    val artists: List<ArtistLocal>
+)

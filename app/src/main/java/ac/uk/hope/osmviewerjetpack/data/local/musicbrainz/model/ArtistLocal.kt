@@ -52,6 +52,17 @@ data class ArtistLocal(
     val cacheTimestamp: Long = System.currentTimeMillis()
 )
 
+fun ArtistLocal.toExternal() = Artist(
+    mbid = mbid,
+    type = type?.toExternal(),
+    name = name,
+    sortName = sortName,
+    country = country,
+    disambiguation = disambiguation,
+    lifeSpan = lifeSpan?.toExternal(),
+    tags = tags,
+)
+
 fun ArtistWithRelationsLocal.toExternal() = Artist(
     mbid = artist.mbid,
     type = artist.type?.toExternal(),
@@ -66,4 +77,5 @@ fun ArtistWithRelationsLocal.toExternal() = Artist(
     followed = followed != null
 )
 
+fun List<ArtistLocal>.toExternal() = map(ArtistLocal::toExternal)
 fun List<ArtistWithRelationsLocal>.toExternal() = map(ArtistWithRelationsLocal::toExternal)
