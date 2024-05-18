@@ -9,4 +9,6 @@
     <string name="followed_artists_icon_desc">Followed artists icon</string>
     <string name="follow_artist_desc">Follow artist</string>
     <string name="unfollow_artist_desc">Unfollow artist</string>
+    <string name="follow_channel_name">New Releases</string>
+    <string name="follow_channel_description">New releases from followed artists</string>
 </resources>

@@ -13,4 +13,6 @@ interface FanartTvRepository {
     fun getAlbumImages(
         mbid: String,
     ): Flow<AlbumImages>
+
+    suspend fun prune()
 }

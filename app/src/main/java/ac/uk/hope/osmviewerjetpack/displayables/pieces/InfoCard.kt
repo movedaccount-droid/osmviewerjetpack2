@@ -71,7 +71,8 @@ fun InfoCard(
                     modifier = Modifier.padding(8.dp)
                 ) {
                     IconImage(
-                        image = icon
+                        image = icon,
+                        description = "$name icon"
                     )
                     Column (
                         Modifier.padding(8.dp)

@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 @HiltViewModel(assistedFactory = ItemListViewModel.ItemListViewModelFactory::class)
 class ItemListViewModel
@@ -51,9 +52,8 @@ class ItemListViewModel
     fun updateVisibleIds() {
         // since we're using a lazylist, items are unloaded as we scroll forward.
         // .lastIndex refers to loaded items, not items in the list!
-        val firstIndex = maxOf(listState.firstVisibleItemIndex, listOffset)
-        val lastIndex =
-            maxOf(firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex, listOffset)
+        val firstIndex = max(listState.firstVisibleItemIndex - listOffset, 0)
+        val lastIndex = firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex
         visibleIds = getVisibleIds(firstIndex, lastIndex)
         startIconLoadingChain()
     }

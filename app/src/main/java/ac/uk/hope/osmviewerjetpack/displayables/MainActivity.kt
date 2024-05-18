@@ -8,6 +8,9 @@ import ac.uk.hope.osmviewerjetpack.displayables.scaffold.SearchFab
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.navigateSingleTopTo
 import ac.uk.hope.osmviewerjetpack.displayables.scaffold.navigateToSearch
 import ac.uk.hope.osmviewerjetpack.ui.theme.OSMViewerJetpackTheme
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,6 +42,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // setup notifications
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.follow_channel_name)
+            val descriptionText = getString(R.string.follow_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val mChannel = NotificationChannel("follow", name, importance)
+            mChannel.description = descriptionText
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
+
 
         setContent {
             OSMViewerJetpackTheme {

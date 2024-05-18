@@ -46,6 +46,21 @@ class FanartTvRepositoryImpl(
             }
     }
 
+    override fun getAlbumImages(mbid: String): Flow<AlbumImages> {
+        return albumImagesDao.observe(mbid)
+            .mapNotNull { albumImages ->
+                if (albumImages == null) {
+                    getAlbumImagesFromNetwork(mbid)
+                }
+                albumImages
+            }
+    }
+
+    override suspend fun prune() {
+        artistImagesDao.prune()
+        albumImagesDao.prune()
+    }
+
     private suspend fun getArtistImagesFromNetwork(mbid: String) {
         withContext(dispatcher) {
             rateLimiter.startOperation()
@@ -64,16 +79,6 @@ class FanartTvRepositoryImpl(
                 rateLimiter.endOperationAndLimit()
             }
         }
-    }
-
-    override fun getAlbumImages(mbid: String): Flow<AlbumImages> {
-        return albumImagesDao.observe(mbid)
-            .mapNotNull { albumImages ->
-                if (albumImages == null) {
-                    getAlbumImagesFromNetwork(mbid)
-                }
-                albumImages
-            }
     }
 
     private suspend fun getAlbumImagesFromNetwork(mbid: String) {

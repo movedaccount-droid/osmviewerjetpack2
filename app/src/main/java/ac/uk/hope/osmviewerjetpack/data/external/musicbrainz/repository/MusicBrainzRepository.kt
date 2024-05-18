@@ -12,16 +12,20 @@ interface MusicBrainzRepository {
 
     fun getArtist(mbid: String): Flow<Artist>
 
-    fun getFollowedArtists(): Flow<List<Artist>>
+    fun getArtists(mbids: List<String>): Flow<List<Artist>>
 
-    fun isFollowed(mbid: String): Flow<Boolean>
+    fun getFollowedArtists(): Flow<List<Artist>>
 
     suspend fun followArtist(mbid: String)
 
     suspend fun unfollowArtist(mbid: String)
 
-    suspend fun updateFollowedCaches()
+    fun isFollowed(mbid: String): Flow<Boolean>
+
+    suspend fun updateFollowedCaches(): List<ReleaseGroup>
 
     fun getReleaseWithReleaseGroup(releaseGroupMbid: String): Flow<Pair<ReleaseGroup, Release>>
+
+    suspend fun prune()
 
 }

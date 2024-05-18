@@ -39,7 +39,8 @@ fun ListItem(
             },
             leadingContent = {
                 IconImage(
-                    image = image
+                    image = image,
+                    description = "$headline icon"
                 )
             },
             modifier = modifier.clickable(

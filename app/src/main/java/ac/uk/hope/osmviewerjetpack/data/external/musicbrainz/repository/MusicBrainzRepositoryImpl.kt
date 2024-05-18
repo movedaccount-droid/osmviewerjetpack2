@@ -20,14 +20,24 @@ import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.toLocal
 import ac.uk.hope.osmviewerjetpack.di.DefaultDispatcher
 import ac.uk.hope.osmviewerjetpack.di.MusicBrainzLimiter
 import android.annotation.SuppressLint
+import androidx.compose.ui.util.fastFilterNotNull
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.concurrent.atomic.AtomicBoolean
 
 // repositories officially "own" our mapper functions and take the network/services
 // to pass through them, responding with our final model
@@ -57,6 +67,26 @@ class MusicBrainzRepositoryImpl(
             }
     }
 
+    override fun getArtists(mbids: List<String>): Flow<List<Artist>> {
+        val hasRunNetworkRequests = AtomicBoolean(false)
+        return artistDao.observeAll(mbids)
+            .distinctUntilChanged()
+            .map {
+                val retrievedMbids = it.mapNotNull { artist -> artist?.artist?.mbid }
+                // only retrieve uncached artists once from network
+                // TODO: obviously this fails if we hit a network error - we should throw an
+                // exception to handle that in getArtistFromNetwork()
+                if (!hasRunNetworkRequests.get()) {
+                    mbids.filter { mbid ->
+                        !retrievedMbids.contains(mbid)
+                    }.map { mbid ->
+                        getArtistFromNetwork(mbid)
+                    }
+                }
+                it.fastFilterNotNull().toExternal()
+            }
+    }
+
     override fun getFollowedArtists(): Flow<List<Artist>> {
         // followed artists remain in cache, so no need to check network
         return artistDao.observeFollowed()
@@ -81,17 +111,28 @@ class MusicBrainzRepositoryImpl(
         }
     }
 
-    override suspend fun updateFollowedCaches() {
+    override suspend fun updateFollowedCaches(): List<ReleaseGroup> {
         val followed = getFollowedArtists().first() // would have been nice to know this function
-        for (artist in followed) {
-            updateArtistCache(artist.mbid)
+        val mutex = Mutex()
+        val result = mutableListOf<ReleaseGroup>()
+        val coroutines = followed.map {
+            withContext(dispatcher) {
+                launch {
+                    val newReleases = updateArtistCache(it.mbid)
+                    mutex.withLock {
+                        result += newReleases
+                    }
+                }
+            }
         }
+        coroutines.joinAll()
+        return result
     }
 
-    private suspend fun updateArtistCache(artistMbid: String) {
-        // make sure we have the artist cached
-        getArtist(artistMbid)
-        withContext(dispatcher) {
+    private suspend fun updateArtistCache(artistMbid: String): List<ReleaseGroup> {
+        return withContext(dispatcher) {
+            // make sure we have the artist cached
+            getArtist(artistMbid)
             // build query
             val follow = followDao.observe(artistMbid).first()!!
             val startDate = follow.started.timeInMillis.toMusicBrainzTimestamp()
@@ -127,36 +168,24 @@ class MusicBrainzRepositoryImpl(
                     .observeAll(releaseGroups.map { it.id })
                     .first()
                     .map { it.mbid }
-                val notCached = releaseGroups.filterNot { cachedMbids.contains(it.id) }
+                val notCached = releaseGroups.filterNot { cachedMbids.contains(it.id) }.toLocal()
 
                 // cache and add notifications for the rest
                 for (releaseGroup in notCached) {
-                    val localReleaseGroup = releaseGroup.toLocal()
-                    releaseGroupDao.upsert(localReleaseGroup)
-                    notificationDao.upsert(NotificationLocal(localReleaseGroup.mbid))
+                    releaseGroupDao.upsert(releaseGroup)
+                    notificationDao.upsert(NotificationLocal(releaseGroup.mbid))
                 }
 
                 // since we were successful, update our sync count for this follow
                 followDao.updateLastSyncCount(artistMbid, cacheOutdatedResponse.count)
+
+                // return all new releases
+                notCached.toExternal()
+            } else {
+                listOf()
             }
         }
     }
-
-    private suspend fun getArtistFromNetwork(mbid: String) {
-        withContext(dispatcher) {
-            rateLimiter.startOperation()
-            val artist = service.lookupArtist(mbid).toLocal()
-            rateLimiter.endOperationAndLimit()
-            upsertArtistWithRelations(artist)
-        }
-    }
-
-    private suspend fun upsertArtistWithRelations(artist: ArtistWithRelationsLocal) {
-        artistDao.upsert(artist.artist)
-        artist.area?.let { areaDao.upsert(it) }
-        artist.beginArea?.let { areaDao.upsert(it) }
-    }
-
 
     override fun getReleaseWithReleaseGroup(
         releaseGroupMbid: String
@@ -181,24 +210,53 @@ class MusicBrainzRepositoryImpl(
             }
     }
 
-    private suspend fun getReleaseGroupFromNetwork(mbid: String) {
+    override suspend fun prune() {
+        artistDao.prune()
+        areaDao.prune()
+        releaseGroupDao.prune()
+        releaseDao.prune()
+    }
+
+    private suspend fun getArtistFromNetwork(mbid: String): Job {
+        return runBlocking {
+            launch(dispatcher) {
+                rateLimiter.startOperation()
+                val artist = service.lookupArtist(mbid).toLocal()
+                rateLimiter.endOperationAndLimit()
+                upsertArtistWithRelations(artist)
+            }
+        }
+    }
+
+    private suspend fun upsertArtistWithRelations(artist: ArtistWithRelationsLocal): Job {
+        return runBlocking {
+            launch(dispatcher) {
+                artistDao.upsert(artist.artist)
+                artist.area?.let { areaDao.upsert(it) }
+                artist.beginArea?.let { areaDao.upsert(it) }
+            }
+        }
+    }
+
+    private suspend fun getReleaseGroupFromNetwork(mbid: String): Job {
         TODO("currently we can only get releaseGroupMbid from a release group" +
                 " in the first place, so this should never fire. holding off for now")
     }
 
-    private suspend fun getReleaseFromNetwork(releaseGroupMbid: String) {
-        withContext(dispatcher) {
-            rateLimiter.startOperation()
-            val release = service.browseReleases(
-                mbid = releaseGroupMbid,
-                limit = 1,
-                offset = 0
-            ).releases[0]
-            rateLimiter.endOperationAndLimit()
-            releaseDao.upsert(release.toLocal(releaseGroupMbid))
+    private suspend fun getReleaseFromNetwork(releaseGroupMbid: String): Job {
+        return runBlocking {
+            launch(dispatcher) {
+                rateLimiter.startOperation()
+                val release = service.browseReleases(
+                    mbid = releaseGroupMbid,
+                    limit = 1,
+                    offset = 0
+                ).releases[0]
+                rateLimiter.endOperationAndLimit()
+                releaseDao.upsert(release.toLocal(releaseGroupMbid))
+            }
         }
     }
-
 }
 
 @SuppressLint("SimpleDateFormat")

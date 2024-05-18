@@ -4,6 +4,7 @@
 
     <!-- TODO: we need to handle this permission, probably -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:name=".BaseApplication"
@@ -23,6 +24,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- deep linking for notifications -->
+            <intent-filter>
+                <data android:scheme="musicbrainzviewer" android:host="" />
             </intent-filter>
             <!-- TODO: search action isn't appearing when selecting text. why not? -->
             <intent-filter>

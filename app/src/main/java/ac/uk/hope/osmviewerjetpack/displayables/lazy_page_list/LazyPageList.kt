@@ -48,6 +48,8 @@ fun LazyPageList(
     val lazyPagingItems = pageFlow.collectAsLazyPagingItems()
     val getVisibleIds = { startIndex: Int, endIndex: Int ->
         // strange things happen when relaunching from the backstack, so do some extra checks
+        // TODO: if we get End of Results at the very bottom of the screen this fails and
+        // will not load any images
         if (startIndex in 0..endIndex
             && endIndex in 0..<lazyPagingItems.itemCount
         ) {
