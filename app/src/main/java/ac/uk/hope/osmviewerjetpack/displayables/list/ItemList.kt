@@ -1,11 +1,13 @@
 package ac.uk.hope.osmviewerjetpack.displayables.list
 
+import ac.uk.hope.osmviewerjetpack.displayables.pieces.Center
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItem
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItemInfo
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -79,7 +81,11 @@ fun ItemList(
                 )
             }
         } ?: run {
-            // TODO: loading
+            item {
+                Center {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }

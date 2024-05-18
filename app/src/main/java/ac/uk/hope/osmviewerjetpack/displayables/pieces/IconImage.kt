@@ -29,45 +29,11 @@ fun IconImage(
     modifier: Modifier = Modifier,
     defaultIcon: ImageVector = Icons.Default.Face,
 ) {
-
-    val hasHadUri = rememberSaveable { mutableStateOf(false) }
-
-    SubcomposeAsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(image)
-            .crossfade(true)
-            .build(),
-        loading = {
-            Center {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        },
-        // only show default icon if a uri was supplied but failed
-        error = {
-            if (image == null) {
-                Center {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            } else {
-                Center {
-                    Icon(
-                        imageVector = defaultIcon,
-                        contentDescription = description,
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                }
-            }
-        },
-        contentDescription = description,
-        contentScale = ContentScale.Crop,
+    ThrobberImage(
+        image = image,
+        description = description,
         modifier = modifier
-            .size(72.dp, 72.dp)
-            .clip(RoundedCornerShape(12.dp)),
-        onError = { err -> err.result.throwable.message?.let { it1 -> Log.d(TAG, it1) } }
+            .size(72.dp, 72.dp),
+        defaultIcon = defaultIcon
     )
-
 }

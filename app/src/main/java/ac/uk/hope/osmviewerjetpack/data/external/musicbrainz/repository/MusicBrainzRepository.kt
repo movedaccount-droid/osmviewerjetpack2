@@ -26,6 +26,8 @@ interface MusicBrainzRepository {
 
     fun getReleaseWithReleaseGroup(releaseGroupMbid: String): Flow<Pair<ReleaseGroup, Release>>
 
+    suspend fun addNotification(releaseGroupMbid: String)
+
     suspend fun prune()
 
 }

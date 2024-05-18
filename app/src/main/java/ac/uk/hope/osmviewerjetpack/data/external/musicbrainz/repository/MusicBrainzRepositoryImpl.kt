@@ -210,6 +210,10 @@ class MusicBrainzRepositoryImpl(
             }
     }
 
+    override suspend fun addNotification(releaseGroupMbid: String) {
+        notificationDao.upsert(NotificationLocal(releaseGroupMbid))
+    }
+
     override suspend fun prune() {
         artistDao.prune()
         areaDao.prune()

@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +21,8 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -48,25 +53,20 @@ fun ImageCarousel(
         state = pagerState,
         pageSize = PageSize.Fixed(imageWidth + offset),
         beyondBoundsPageCount = 1,
-        contentPadding = PaddingValues(start = offset, end = offset),
+        contentPadding = PaddingValues(start = offset),
         flingBehavior = PagerDefaults.flingBehavior(
             state = pagerState,
             pagerSnapDistance = PagerSnapDistance.atMost(3)
         ),
         modifier = modifier
     ) { page ->
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(images[page])
-                .build(),
-            // TODO: allow custom placeholder
-            placeholder = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = description,
-            contentScale = ContentScale.Crop,
+        ThrobberImage(
+            image = images[page],
+            description = description,
             modifier = Modifier
-                .widthIn(0.dp, imageWidth)
-                .clip(RoundedCornerShape(12.dp)),
-            onError = { err -> err.result.throwable.message?.let { it1 -> Log.d(TAG, it1) } }
+                .padding(end = offset)
+                .fillMaxSize(),
+            defaultIcon = Icons.Default.Clear
         )
     }
 }

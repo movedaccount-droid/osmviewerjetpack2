@@ -42,6 +42,12 @@ class ReleaseViewViewModel
         }
     }
 
+    fun addNotification(releaseGroupMbid: String) {
+        viewModelScope.launch {
+            musicBrainzRepository.addNotification(releaseGroupMbid)
+        }
+    }
+
     @AssistedFactory
     interface ReleaseViewViewModelFactory {
         fun create(releaseGroupMbid: String): ReleaseViewViewModel

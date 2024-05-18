@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +50,9 @@ fun ReleaseView(
         if (it.first.types.firstOrNull() != null) {
             table["Type"] = it.first.types.joinToString(", ")
         }
+        Button(onClick = { viewModel.addNotification(releaseGroupMbid) }) {
+            Text(text = "DEBUG: ADD NOTIFICATION")
+        }
         LazyColumn {
             item {
                 InfoCard(
@@ -58,7 +62,9 @@ fun ReleaseView(
                     table = table,
                     expanded = expanded.value,
                     onClick = { expanded.value = !expanded.value },
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
                 )
             }
             item {
