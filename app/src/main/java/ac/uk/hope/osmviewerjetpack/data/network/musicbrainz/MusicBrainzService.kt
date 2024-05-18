@@ -1,6 +1,7 @@
 package ac.uk.hope.osmviewerjetpack.data.network.musicbrainz
 
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.ArtistNetwork
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.SearchReleaseGroupsResponse
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.SearchArtistsResponse
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.BrowseReleaseGroupsResponse
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.responses.BrowseReleasesResponse
@@ -22,13 +23,22 @@ interface MusicBrainzService {
         @Query("offset") offset: Int
     ): SearchArtistsResponse
 
+    @GET("release-group")
+    suspend fun searchReleaseGroups(
+        @Query("query") query: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("inc") inc: String = "artist-credits",
+        @Query("release-groups-status") showType: String = "website-default"
+    ): SearchReleaseGroupsResponse
+
     @GET("artist/{mbid}")
     suspend fun lookupArtist(
         @Path("mbid") mbid: String
     ): ArtistNetwork
 
     @GET("release-group")
-    suspend fun browseReleaseGroupsByArtist(
+    suspend fun browseReleaseGroups(
         @Query("artist") mbid: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
@@ -37,7 +47,7 @@ interface MusicBrainzService {
     ): BrowseReleaseGroupsResponse
 
     @GET("release")
-    suspend fun browseReleasesByReleaseGroup(
+    suspend fun browseReleases(
         @Query("release-group") mbid: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,

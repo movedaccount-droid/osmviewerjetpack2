@@ -12,7 +12,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = ArtistViewViewModel.ArtistViewViewModelFactory::class)
 class ArtistViewViewModel
@@ -38,7 +37,7 @@ class ArtistViewViewModel
             }
         }
         viewModelScope.launch{
-            musicBrainzRepository.isArtistFollowed(mbid).collect {
+            musicBrainzRepository.isFollowed(mbid).collect {
                 artistFollowed.value = it
             }
         }

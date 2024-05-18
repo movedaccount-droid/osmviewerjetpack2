@@ -17,7 +17,6 @@ data class ReleaseGroupNetwork(
     val secondaryTypeIds: List<String>,
     @SerializedName("secondary-types")
     val secondaryTypes: List<String>,
-    // TODO: we will need to parse this to a datetime at some point for display sorting
     @SerializedName("first-release-date")
     val firstReleaseDate: String,
     @SerializedName("artist-credit")

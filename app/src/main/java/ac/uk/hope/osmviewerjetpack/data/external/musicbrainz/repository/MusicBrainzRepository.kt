@@ -3,7 +3,6 @@ package ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Release
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupWithReleaseLocal
 import kotlinx.coroutines.flow.Flow
 
 // we define our repositories as an interface, so that we can easily swap them out
@@ -15,11 +14,13 @@ interface MusicBrainzRepository {
 
     fun getFollowedArtists(): Flow<List<Artist>>
 
-    fun isArtistFollowed(mbid: String): Flow<Boolean>
+    fun isFollowed(mbid: String): Flow<Boolean>
 
     suspend fun followArtist(mbid: String)
 
     suspend fun unfollowArtist(mbid: String)
+
+    suspend fun updateFollowedCaches()
 
     fun getReleaseWithReleaseGroup(releaseGroupMbid: String): Flow<Pair<ReleaseGroup, Release>>
 

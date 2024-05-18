@@ -1,19 +1,11 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-
-data class ReleaseGroupWithReleaseLocal(
-    @Embedded val releaseGroup: ReleaseGroupLocal,
-    @Relation(
-        parentColumn = "mbid",
-        entityColumn = "releaseGroupMbid"
-    )
-    val release: ReleaseLocal?,
-)
 
 @Entity(
     tableName = "releaseGroups"
@@ -45,4 +37,5 @@ fun ReleaseGroupLocal.toExternal() = ReleaseGroup(
     disambiguation = disambiguation
 )
 
+@JvmName("toExternal")
 fun List<ReleaseGroupLocal>.toExternal() = map(ReleaseGroupLocal::toExternal)

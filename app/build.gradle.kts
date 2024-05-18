@@ -83,7 +83,7 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.hilt.android) // hilt, and kapt annotation compiler
     kapt(libs.hilt.compiler)
-    androidTestImplementation (libs.hilt.android.testing)
+    androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.compiler)
@@ -93,6 +93,10 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.work.runtime.ktx) // workmanager
+    androidTestImplementation(libs.androidx.work.testing) // workmanager testing
+    implementation(libs.androidx.hilt.work) // workmanager hilt dependency injection
+    kapt(libs.androidx.hilt.compiler) // compiler for above
 }
 
 kapt {

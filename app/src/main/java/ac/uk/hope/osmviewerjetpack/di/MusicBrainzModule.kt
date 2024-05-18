@@ -6,7 +6,8 @@ import ac.uk.hope.osmviewerjetpack.data.external.util.RateLimiter
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.MusicBrainzDatabase
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.AreaDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ArtistDao
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowedDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.FollowDao
+import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.NotificationDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseDao
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.dao.ReleaseGroupDao
 import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.MusicBrainzService
@@ -68,8 +69,12 @@ class MusicBrainzModule {
             = database.releaseDao()
 
     @Provides
-    fun provideFollowedDao(database: MusicBrainzDatabase): FollowedDao
+    fun provideFollowedDao(database: MusicBrainzDatabase): FollowDao
             = database.followedDao()
+
+    @Provides
+    fun provideNotificationDao(database: MusicBrainzDatabase): NotificationDao
+            = database.notificationDao()
 
     @Provides
     @Singleton
@@ -84,13 +89,14 @@ class MusicBrainzModule {
         areaDao: AreaDao,
         releaseGroupDao: ReleaseGroupDao,
         releaseDao: ReleaseDao,
-        followedDao: FollowedDao,
+        followDao: FollowDao,
+        notificationDao: NotificationDao,
         service: MusicBrainzService,
         @MusicBrainzLimiter rateLimiter: RateLimiter,
         @DefaultDispatcher dispatcher: CoroutineDispatcher,
     ): MusicBrainzRepository {
         return MusicBrainzRepositoryImpl(
-            artistDao, areaDao, releaseGroupDao, releaseDao, followedDao,
+            artistDao, areaDao, releaseGroupDao, releaseDao, followDao, notificationDao,
             service, rateLimiter, dispatcher)
     }
 

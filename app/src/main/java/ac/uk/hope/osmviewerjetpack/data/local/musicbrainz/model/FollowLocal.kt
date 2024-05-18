@@ -1,10 +1,9 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
+import ac.uk.hope.osmviewerjetpack.data.local.util.getCurrentCalendar
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
 
 // there is no simple way to have a field in an object, but then not update it when we
 // retrieve it from the network, only provide it on initialization. this would require an Update
@@ -15,24 +14,15 @@ import java.util.Date
 // this is about the point where my commits devolve into new and fascinating swears
 
 @Entity(
-    tableName = "followed"
+    tableName = "follow"
 )
-data class FollowedLocal(
+data class FollowLocal(
     @PrimaryKey val artistMbid: String,
     val started: Calendar,
-    val newReleases: List<String>
+    val lastSyncCount: Int, // number of release groups seen at last sync
 )
 
 object FollowedLocalFactory {
-    fun create(mbid: String): FollowedLocal = FollowedLocal(mbid, getCurrentDate(), listOf())
-}
-
-// can't use new date apis, too new
-private fun getCurrentDate(): Calendar {
-    val cal = Calendar.getInstance()
-    cal.set(Calendar.HOUR_OF_DAY, 0)
-    cal.set(Calendar.MINUTE, 0)
-    cal.set(Calendar.SECOND, 0)
-    cal.set(Calendar.MILLISECOND, 0)
-    return cal
+    fun create(mbid: String): FollowLocal =
+        FollowLocal(mbid, getCurrentCalendar(), 0)
 }

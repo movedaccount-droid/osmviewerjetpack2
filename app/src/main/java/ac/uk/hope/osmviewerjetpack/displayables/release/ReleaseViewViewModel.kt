@@ -5,7 +5,6 @@ import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRep
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Release
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.ReleaseGroup
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
-import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupWithReleaseLocal
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

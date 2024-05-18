@@ -15,8 +15,8 @@ interface ArtistDao {
     fun observe(mbid: String, timeout: Long = currentCacheTimeout): Flow<ArtistWithRelationsLocal?>
 
     @Query("SELECT * FROM artists " +
-            "INNER JOIN followed ON followed.artistMbid = artists.mbid " +
-            "WHERE followed.artistMbid IS NOT NULL " +
+            "INNER JOIN follow ON follow.artistMbid = artists.mbid " +
+            "WHERE follow.artistMbid IS NOT NULL " +
             "AND cacheTimestamp > :timeout")
     fun observeFollowed(timeout: Long = currentCacheTimeout): Flow<List<ArtistWithRelationsLocal>>
 
@@ -29,7 +29,7 @@ interface ArtistDao {
     @Query("DELETE FROM artists " +
             "WHERE ROWID IN (" +
                 "SELECT a.ROWID FROM artists a " +
-            "INNER JOIN followed f ON f.artistMbid = a.mbid " +
+            "INNER JOIN follow f ON f.artistMbid = a.mbid " +
                 "WHERE f.artistMbid IS NULL AND a.cacheTimestamp < :timeout" +
             ")")
     suspend fun prune(timeout: Long = currentCacheTimeout)

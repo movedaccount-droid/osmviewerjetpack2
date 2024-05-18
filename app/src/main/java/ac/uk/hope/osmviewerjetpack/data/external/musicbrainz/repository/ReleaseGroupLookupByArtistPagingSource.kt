@@ -45,7 +45,7 @@ class ReleaseGroupLookupByArtistPagingSource
         val response: BrowseReleaseGroupsResponse
         try {
             rateLimiter.startOperation()
-            response = service.browseReleaseGroupsByArtist(mbid, loadSize, offset)
+            response = service.browseReleaseGroups(mbid, loadSize, offset)
         } catch (e: IOException) {
             // IOException for network failures.
             return LoadResult.Error(e)

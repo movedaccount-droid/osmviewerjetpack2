@@ -23,7 +23,7 @@ data class ArtistWithRelationsLocal(
         parentColumn = "mbid",
         entityColumn = "artistMbid"
     )
-    val followed: FollowedLocal?
+    val followed: FollowLocal?
 )
 
 @Entity(
