@@ -2,13 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PreviewSearchResultHeaderCard">
-        <State />
-      </entry>
-      <entry key="PreviewSearchResultListItem">
-        <State />
-      </entry>
-      <entry key="PreviewSearchResultPolaroidCard">
+      <entry key="NotificationTests">
         <State />
       </entry>
       <entry key="app">
@@ -26,6 +20,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-05-18T19:40:38.744807319Z" />
         </State>
+      </entry>
+      <entry key="pruneDoesNotClearNewData()">
+        <State />
       </entry>
     </value>
   </component>

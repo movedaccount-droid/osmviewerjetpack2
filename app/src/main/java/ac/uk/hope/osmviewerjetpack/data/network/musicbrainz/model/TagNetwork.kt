@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TagNetwork(
-    val count: Int,
-    val name: String
+    val name: String,
+    val count: Int
 )
 
 fun List<TagNetwork>.toLocal() = associateBy({it.name}, {it.count})

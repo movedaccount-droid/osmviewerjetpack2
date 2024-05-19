@@ -50,4 +50,8 @@ object ReleaseGroupNetworkFactory {
     fun fromMbid(mbid: String) = ReleaseGroupNetwork (
         mbid, mbid, Calendar.getInstance().toDateString()
     )
+    fun fromMbidWithArtists(mbid: String, artists: List<ArtistNetwork>) = ReleaseGroupNetwork (
+        mbid, mbid, Calendar.getInstance().toDateString(),
+        artistCredit = artists.map { ArtistCreditNetwork(it.name, it, " and ") }
+    )
 }

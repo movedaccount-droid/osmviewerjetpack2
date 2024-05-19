@@ -97,7 +97,6 @@ dependencies {
     androidTestImplementation(libs.androidx.work.testing) // workmanager testing
     implementation(libs.androidx.hilt.work) // workmanager hilt dependency injection
     kapt(libs.androidx.hilt.compiler) // compiler for above
-    testImplementation(libs.mockito.core) // mock objects for testing
     testImplementation(libs.kotlinx.coroutines.test) // blocking coroutines for testing
 }
 

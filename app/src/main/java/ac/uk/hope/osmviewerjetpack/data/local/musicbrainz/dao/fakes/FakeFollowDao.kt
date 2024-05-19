@@ -10,6 +10,8 @@ class FakeFollowDao(
 ) : FollowDao {
 
     private val followsMap = follows.associateBy { it.artistMbid }.toMutableMap()
+    val follows
+        get() = followsMap.values.toList()
 
     override fun observe(mbid: String): Flow<FollowLocal?> = flow {
         emit(followsMap[mbid])

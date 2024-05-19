@@ -1,6 +1,8 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.ArtistNetwork
+import ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model.TagNetwork
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -74,6 +76,20 @@ fun ArtistWithRelationsLocal.toExternal() = Artist(
     lifeSpan = artist.lifeSpan?.toExternal(),
     tags = artist.tags,
     followed = follow != null
+)
+
+fun ArtistWithRelationsLocal.toNetwork() = ArtistNetwork(
+    id = artist.mbid,
+    type = artist.type?.name,
+    typeId = artist.type?.mbid,
+    name = artist.name,
+    sortName = artist.sortName,
+    country = artist.country,
+    area = area?.toNetwork(),
+    beginArea = beginArea?.toNetwork(),
+    disambiguation = artist.disambiguation,
+    lifeSpan = artist.lifeSpan?.toNetwork(),
+    tags = artist.tags.map { TagNetwork(it.key, it.value) }
 )
 
 @JvmName("toExternalArtist")
