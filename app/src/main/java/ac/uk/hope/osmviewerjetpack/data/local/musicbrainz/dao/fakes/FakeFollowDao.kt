@@ -23,8 +23,8 @@ class FakeFollowDao(
         followsMap[mbid]?.let {
             followsMap[mbid] = FollowLocal(
                 it.artistMbid,
+                lastSyncCount,
                 it.started,
-                lastSyncCount
             )
         }
     }
