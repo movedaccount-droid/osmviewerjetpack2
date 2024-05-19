@@ -49,9 +49,8 @@ fun MBVSearchBar(
         modifier = modifier.padding(if (active) 0.dp else 8.dp)
     ) {
         LazyColumn {
-            items(5) {
-                Text(text = "some")
-            }
+            // we should have search history here,
+            // but it never came to be ...
         }
     }
 }
