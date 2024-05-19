@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NotificationDao {
 
+    @Query(OBSERVE_QUERY)
+    fun observe(releaseGroupMbid: String): Flow<NotificationLocal?>
+
     @Query(OBSERVE_ALL_QUERY)
     fun observeAll(): Flow<List<NotificationLocal>>
 
@@ -27,6 +30,11 @@ interface NotificationDao {
     suspend fun delete(releaseGroupMbid: String)
 
 }
+
+private const val OBSERVE_QUERY = """
+SELECT * from notifications
+WHERE releaseGroupMbid = :releaseGroupMbid
+"""
 
 private const val OBSERVE_ALL_QUERY = """
 SELECT * FROM notifications

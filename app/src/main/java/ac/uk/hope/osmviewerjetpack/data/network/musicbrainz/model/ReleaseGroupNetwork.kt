@@ -9,19 +9,19 @@ import kotlinx.serialization.Serializable
 data class ReleaseGroupNetwork(
     val id: String,
     val title: String,
-    @SerializedName("primary-type-id")
-    val primaryTypeId: String?,
-    @SerializedName("primary-type")
-    val primaryType: String?,
-    @SerializedName("secondary-type-ids")
-    val secondaryTypeIds: List<String>,
-    @SerializedName("secondary-types")
-    val secondaryTypes: List<String>,
     @SerializedName("first-release-date")
     val firstReleaseDate: String,
+    @SerializedName("primary-type-id")
+    val primaryTypeId: String? = null,
+    @SerializedName("primary-type")
+    val primaryType: String? = null,
+    @SerializedName("secondary-type-ids")
+    val secondaryTypeIds: List<String> = listOf(),
+    @SerializedName("secondary-types")
+    val secondaryTypes: List<String> = listOf(),
     @SerializedName("artist-credit")
-    val artistCredit: List<ArtistCreditNetwork>,
-    val disambiguation: String,
+    val artistCredit: List<ArtistCreditNetwork> = listOf(),
+    val disambiguation: String = "",
 )
 
 fun ReleaseGroupNetwork.toLocal() = ReleaseGroupLocal(
