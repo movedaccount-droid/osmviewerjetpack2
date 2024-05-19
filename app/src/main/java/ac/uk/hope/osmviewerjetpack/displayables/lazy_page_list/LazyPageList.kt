@@ -84,7 +84,9 @@ fun LazyPageList(
         }
         items(
             count = lazyPagingItems.itemCount,
-            key = lazyPagingItems.itemKey { it.id }
+            // we should really do this, but musicbrainz occasionally throws duplicate mbids.
+            // probably from relisting multiple aliases of a single artist. irritating
+            // key = lazyPagingItems.itemKey { it.id }
         ) { index ->
             val result = lazyPagingItems[index]!!
             ListItem(
