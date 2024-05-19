@@ -40,7 +40,7 @@ fun ArtistNetwork.toLocal() = ArtistWithRelationsLocal(
     ),
     area = area?.toLocal(),
     beginArea = beginArea?.toLocal(),
-    followed = null,
+    follow = null,
 )
 
 fun List<ArtistNetwork>.toLocal() = map(ArtistNetwork::toLocal)

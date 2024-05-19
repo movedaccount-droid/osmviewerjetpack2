@@ -18,11 +18,13 @@ import java.util.Calendar
 )
 data class FollowLocal(
     @PrimaryKey val artistMbid: String,
-    val started: Calendar,
     val lastSyncCount: Int, // number of release groups seen at last sync
+    val started: Calendar,
 )
 
 object FollowedLocalFactory {
     fun create(mbid: String): FollowLocal =
-        FollowLocal(mbid, getCurrentCalendar(), 0)
+        withCount(mbid, 0)
+    fun withCount(mbid: String, lastSyncCount: Int): FollowLocal =
+        FollowLocal(mbid, lastSyncCount, getCurrentCalendar())
 }

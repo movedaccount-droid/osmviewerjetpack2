@@ -2,8 +2,10 @@ package ac.uk.hope.osmviewerjetpack.data.network.musicbrainz.model
 
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.ReleaseGroupLocal
 import ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model.TypeLocal
+import ac.uk.hope.osmviewerjetpack.util.toDateString
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import java.util.Calendar
 
 @Serializable
 data class ReleaseGroupNetwork(
@@ -43,3 +45,9 @@ fun ReleaseGroupNetwork.toLocal() = ReleaseGroupLocal(
 )
 
 fun List<ReleaseGroupNetwork>.toLocal() = map(ReleaseGroupNetwork::toLocal)
+
+object ReleaseGroupNetworkFactory {
+    fun fromMbid(mbid: String) = ReleaseGroupNetwork (
+        mbid, mbid, Calendar.getInstance().toDateString()
+    )
+}

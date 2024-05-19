@@ -13,6 +13,8 @@ class FakeReleaseGroupDao(
 ): ReleaseGroupDao {
 
     private val releaseGroupsMap = releaseGroups.associateBy { it.mbid }.toMutableMap()
+    val releaseGroups
+        get() = releaseGroupsMap.values.toList()
     private val releasesMap = releases.associateBy { it.releaseGroupMbid }.toMutableMap()
 
     override fun observe(mbid: String, timeout: Long): Flow<ReleaseGroupLocal?> = flow {
