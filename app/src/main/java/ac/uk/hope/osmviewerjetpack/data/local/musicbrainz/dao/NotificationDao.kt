@@ -18,7 +18,7 @@ interface NotificationDao {
 
     @Transaction
     @Query(OBSERVE_ALL_DETAILED_QUERY)
-    fun observeAllWithDetailedReleaseGroups(): Flow<Map<NotificationLocal, Map<ReleaseGroupLocal, List<ArtistLocal>>>>
+    fun observeAllWithDetailedReleaseGroups(): Flow<Map<NotificationLocal, ReleaseGroupLocal>>
 
     @Upsert
     suspend fun upsert(notification: NotificationLocal)
@@ -36,8 +36,6 @@ private const val OBSERVE_ALL_DETAILED_QUERY = """
 SELECT * FROM notifications n
 INNER JOIN releaseGroups rg
 ON rg.mbid = n.releaseGroupMbid
-INNER JOIN artists a
-ON a.mbid = rg.artistMbid
 """
 
 private const val DELETE_QUERY = """

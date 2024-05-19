@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -29,6 +32,7 @@ import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
+import kotlin.math.min
 
 // generic search results component.
 // retrieves paginated SearchResults from a SearchViewSearcher, which can be extended
@@ -41,19 +45,16 @@ fun LazyPageList(
     pageFlow: Flow<PagingData<ListItemInfo>>,
     getItemIcon: (id: String) -> Flow<Uri>,
     onItemSelected: (id: String) -> Unit = {},
+    defaultIcon: ImageVector = Icons.Default.Face,
     header: (@Composable ColumnScope.() -> Unit)? = null
 ) {
 
     // check what is on-screen for image prioritization
     val lazyPagingItems = pageFlow.collectAsLazyPagingItems()
     val getVisibleIds = { startIndex: Int, endIndex: Int ->
-        // strange things happen when relaunching from the backstack, so do some extra checks
-        // TODO: if we get End of Results at the very bottom of the screen this fails and
-        // will not load any images
-        if (startIndex in 0..endIndex
-            && endIndex in 0..<lazyPagingItems.itemCount
-        ) {
-            (startIndex..endIndex).map {
+        val count = lazyPagingItems.itemCount
+        if (count > 0) {
+            (startIndex..min(endIndex, count - 1)).map {
                 lazyPagingItems.peek(it)!!.id
             }
         } else {
@@ -90,6 +91,7 @@ fun LazyPageList(
                 image = viewModel.images[result.id],
                 headline = result.name,
                 subhead = result.desc,
+                defaultIcon = defaultIcon,
                 onClick = { onItemSelected(result.id) }
             )
         }

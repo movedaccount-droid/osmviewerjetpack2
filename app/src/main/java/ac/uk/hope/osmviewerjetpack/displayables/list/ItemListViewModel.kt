@@ -50,12 +50,14 @@ class ItemListViewModel
     // there are probably better ways to do this that would allow loading all cached images
     // immediately. but i can't think of them without this getting Very Complicated.
     fun updateVisibleIds() {
-        // since we're using a lazylist, items are unloaded as we scroll forward.
-        // .lastIndex refers to loaded items, not items in the list!
+        val visibleItemCount = listState.layoutInfo.visibleItemsInfo.lastIndex
         val firstIndex = max(listState.firstVisibleItemIndex - listOffset, 0)
-        val lastIndex = firstIndex + listState.layoutInfo.visibleItemsInfo.lastIndex
-        visibleIds = getVisibleIds(firstIndex, lastIndex)
-        startIconLoadingChain()
+        val lastIndex = firstIndex + visibleItemCount
+        // edge case values for empty lists
+        if (visibleItemCount != -1 && firstIndex <= lastIndex) {
+            visibleIds = getVisibleIds(firstIndex, lastIndex)
+            startIconLoadingChain()
+        }
     }
 
     private fun startIconLoadingChain() {

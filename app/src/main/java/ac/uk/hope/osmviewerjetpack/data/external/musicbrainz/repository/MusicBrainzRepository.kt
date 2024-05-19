@@ -36,6 +36,8 @@ interface MusicBrainzRepository {
 
     suspend fun addNotification(releaseGroupMbid: String)
 
+    suspend fun removeNotification(releaseGroupMbid: String)
+
     suspend fun prune()
 
 }

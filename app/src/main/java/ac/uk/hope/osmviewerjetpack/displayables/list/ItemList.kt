@@ -7,11 +7,14 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +23,7 @@ fun ItemList(
     items: Flow<List<ListItemInfo>>,
     getItemIcon: (id: String) -> Flow<Uri>,
     onItemSelected: (id: String) -> Unit = {},
+    defaultIcon: ImageVector = Icons.Default.Face,
     header: (@Composable ColumnScope.() -> Unit)? = null
 ) {
 
@@ -36,12 +40,9 @@ fun ItemList(
 
     // check on-screen for image prioritization
     val getVisibleIds = { startIndex: Int, endIndex: Int ->
-        if (
-            itemsState.value != null
-            && startIndex in 0..endIndex
-            && endIndex in itemsState.value!!.indices
-        ) {
-            itemsState.value!!.subList(startIndex, endIndex).map { it.id }
+        val list = itemsState.value
+        if (!list.isNullOrEmpty()) {
+            list.subList(startIndex, endIndex + 1).map { it.id }
         } else {
             listOf()
         }
@@ -77,6 +78,7 @@ fun ItemList(
                     image = viewModel.images[result.id],
                     headline = result.name,
                     subhead = result.desc,
+                    defaultIcon = defaultIcon,
                     onClick = { onItemSelected(result.id) }
                 )
             }

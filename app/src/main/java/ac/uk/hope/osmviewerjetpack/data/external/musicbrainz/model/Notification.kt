@@ -10,6 +10,5 @@ data class Notification (
 
 data class DetailedNotification (
     val sent: Calendar,
-    val releaseGroup: ReleaseGroup,
-    val artists: List<Artist>
+    val releaseGroup: ReleaseGroup
 )

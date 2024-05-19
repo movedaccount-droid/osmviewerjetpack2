@@ -3,6 +3,7 @@ package ac.uk.hope.osmviewerjetpack.displayables.list.notifications
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.ListItemInfo
+import ac.uk.hope.osmviewerjetpack.util.toDateString
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationsViewModel
 @Inject constructor(
-    musicBrainzRepository: MusicBrainzRepository,
+    private val musicBrainzRepository: MusicBrainzRepository,
     private val fanartTvRepository: FanartTvRepository,
 ): ViewModel() {
 
@@ -29,8 +30,7 @@ class NotificationsViewModel
                 ListItemInfo(
                     id = notification.releaseGroup.mbid,
                     name = notification.releaseGroup.name,
-                    desc = "${notification.artists.joinToString { it.name }} " +
-                            "(Added ${notification.sent}"
+                    desc = "Added ${notification.sent.toDateString()}"
                 )
             }
         }
@@ -46,6 +46,12 @@ class NotificationsViewModel
 
     val getItemIcon = { mbid: String ->
         fanartTvRepository.getAlbumImages(mbid).map { it.thumbnail }
+    }
+
+    fun removeNotification(mbid: String) {
+        viewModelScope.launch {
+            musicBrainzRepository.removeNotification(mbid)
+        }
     }
 
 }

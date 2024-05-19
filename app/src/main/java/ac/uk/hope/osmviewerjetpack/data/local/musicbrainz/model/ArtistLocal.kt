@@ -77,5 +77,8 @@ fun ArtistWithRelationsLocal.toExternal() = Artist(
     followed = followed != null
 )
 
+@JvmName("toExternalArtist")
 fun List<ArtistLocal>.toExternal() = map(ArtistLocal::toExternal)
+
+@JvmName("toExternalRelatedArtist")
 fun List<ArtistWithRelationsLocal>.toExternal() = map(ArtistWithRelationsLocal::toExternal)

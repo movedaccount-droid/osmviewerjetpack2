@@ -6,12 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -21,6 +23,7 @@ fun ListItem(
     headline: String,
     subhead: String?,
     modifier: Modifier = Modifier,
+    defaultIcon: ImageVector = Icons.Default.Face,
     onClick: () -> Unit = {},
 ) {
     Column {
@@ -40,7 +43,8 @@ fun ListItem(
             leadingContent = {
                 IconImage(
                     image = image,
-                    description = "$headline icon"
+                    description = "$headline icon",
+                    defaultIcon = defaultIcon
                 )
             },
             modifier = modifier.clickable(

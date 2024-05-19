@@ -1,6 +1,6 @@
 package ac.uk.hope.osmviewerjetpack.data.local.musicbrainz.model
 
-import ac.uk.hope.osmviewerjetpack.data.local.util.getCurrentCalendar
+import ac.uk.hope.osmviewerjetpack.util.getCurrentCalendar
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Calendar

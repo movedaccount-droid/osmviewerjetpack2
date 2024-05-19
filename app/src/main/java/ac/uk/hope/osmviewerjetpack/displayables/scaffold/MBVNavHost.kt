@@ -27,8 +27,11 @@ fun MBVNavHost(
         modifier = modifier
     ) {
         composable(route = Home.route) {
-            // TODO: eventually pass navcontroller down for item selection
-            Notifications {}
+            Notifications(
+                onReleaseGroupSelected = { mbid ->
+                    navController.navigateToRelease(mbid)
+                }
+            )
         }
         composable(
             route = ArtistSearch.routeWithArgs,

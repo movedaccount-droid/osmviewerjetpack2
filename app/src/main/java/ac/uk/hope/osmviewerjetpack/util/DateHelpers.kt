@@ -1,5 +1,7 @@
-package ac.uk.hope.osmviewerjetpack.data.local.util
+package ac.uk.hope.osmviewerjetpack.util
 
+import android.annotation.SuppressLint
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 // can't use new date apis, too new
@@ -11,3 +13,6 @@ fun getCurrentCalendar(): Calendar {
     cal.set(Calendar.MILLISECOND, 0)
     return cal
 }
+
+@SuppressLint("SimpleDateFormat")
+fun Calendar.toDateString(): String = SimpleDateFormat("yyyy-MM-dd").format(this.time)
