@@ -2,8 +2,12 @@ package ac.uk.hope.osmviewerjetpack.displayables.artist
 
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.model.ArtistImages
 import ac.uk.hope.osmviewerjetpack.data.external.fanarttv.repository.FanartTvRepository
+import ac.uk.hope.osmviewerjetpack.data.external.mbv.repository.WorkManagerRepository
+import ac.uk.hope.osmviewerjetpack.data.external.mbv.repository.WorkManagerRepositoryImpl
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.model.Artist
 import ac.uk.hope.osmviewerjetpack.data.external.musicbrainz.repository.MusicBrainzRepository
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +22,8 @@ class ArtistViewViewModel
 @AssistedInject constructor(
     @Assisted private val mbid: String,
     private val musicBrainzRepository: MusicBrainzRepository,
-    private val fanartTvRepository: FanartTvRepository
+    private val fanartTvRepository: FanartTvRepository,
+    private val workManagerRepository: WorkManagerRepository
 ): ViewModel() {
 
     val artist = mutableStateOf<Artist?>(null)
@@ -52,6 +57,7 @@ class ArtistViewViewModel
         } else {
             viewModelScope.launch {
                 musicBrainzRepository.followArtist(mbid)
+                workManagerRepository.startSyncWorker()
             }
         }
         artistFollowed.value = !artistFollowed.value

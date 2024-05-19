@@ -3,6 +3,9 @@ package ac.uk.hope.osmviewerjetpack.displayables.artist
 import ac.uk.hope.osmviewerjetpack.R
 import ac.uk.hope.osmviewerjetpack.displayables.pieces.InfoCard
 import ac.uk.hope.osmviewerjetpack.displayables.lazy_page_list.album.ReleaseGroupLookupByArtist
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

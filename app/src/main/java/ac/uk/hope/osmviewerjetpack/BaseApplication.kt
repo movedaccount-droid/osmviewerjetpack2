@@ -1,5 +1,6 @@
 package ac.uk.hope.osmviewerjetpack
 
+import ac.uk.hope.osmviewerjetpack.data.external.mbv.repository.WorkManagerRepository
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -12,11 +13,9 @@ import javax.inject.Inject
 class BaseApplication: Application(), Configuration.Provider {
 
     @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+    lateinit var workManagerRepository: WorkManagerRepository
 
     override val workManagerConfiguration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
+        get() = workManagerRepository.workManagerConfiguration
 
 }
